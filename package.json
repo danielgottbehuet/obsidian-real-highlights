@@ -1,6 +1,6 @@
 {
   "name": "real-highlights",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "Realistische, deterministische Textmarker-Darstellung (Rendering-Engine + Playground)",
   "type": "module",

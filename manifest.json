@@ -1,7 +1,7 @@
 {
   "id": "real-highlights",
   "name": "Real Highlights",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "minAppVersion": "1.13.0",
   "description": "Turn ==highlights== into realistic highlighter pen strokes with organic edges, slanted tips and ink texture. Supports highlight colors.",
   "author": "Daniel Gottbehüt",

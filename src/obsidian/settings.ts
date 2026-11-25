@@ -16,6 +16,8 @@ import {
   settingsToConfig,
 } from "./core/pluginConfig";
 import type RealHighlightsPlugin from "./main";
+// Offizielles Buy-Me-a-Coffee-Banner, beim Build als data-URL eingebettet (kein Netzwerkzugriff).
+import bmcButton from "./assets/bmc-button.png";
 
 /** Fallback, falls das Manifest keine fundingUrl liefert. */
 const FUNDING_URL = "https://buymeacoffee.com/derscottbert";
@@ -253,20 +255,22 @@ export class RealHighlightsSettingTab extends PluginSettingTab {
     };
   }
 
-  /** Unterstützungs-Knopf im Buy-Me-a-Coffee-Stil (reines CSS, kein Netzwerkzugriff) und Version. */
+  /** Buy-Me-a-Coffee-Banner (eingebettet, kein Netzwerkzugriff) und Version. */
   private renderFooter(row: HTMLElement): void {
     row.empty();
     const manifest = this.plugin.manifest as typeof this.plugin.manifest & { fundingUrl?: unknown };
     const fundingUrl = typeof manifest.fundingUrl === "string" ? manifest.fundingUrl : FUNDING_URL;
     const footer = row.createDiv({ cls: "real-highlights-footer" });
     footer.createDiv({ cls: "real-highlights-support-text", text: this.t("support.text") });
-    const button = footer.createEl("a", {
+    const link = footer.createEl("a", {
       cls: "real-highlights-coffee",
       href: fundingUrl,
-      attr: { target: "_blank", rel: "noopener", "aria-label": this.t("support.link") },
+      attr: { target: "_blank", rel: "noopener" },
     });
-    button.createSpan({ cls: "real-highlights-coffee-cup", text: "☕" });
-    button.createSpan({ text: this.t("support.link") });
+    link.createEl("img", {
+      cls: "real-highlights-coffee-img",
+      attr: { src: bmcButton, alt: this.t("support.link"), width: "217", height: "60" },
+    });
     footer.createDiv({ cls: "real-highlights-version", text: `${manifest.name} ${manifest.version}` });
   }
 

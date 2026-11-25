@@ -60,6 +60,8 @@ const ctx = await esbuild.context({
   sourcemap: watch ? "inline" : false,
   minify: !watch,
   treeShaking: true,
+  // Bilder (z. B. das Buy-Me-a-Coffee-Banner) als data-URL einbetten: kein Netzwerkzugriff zur Laufzeit.
+  loader: { ".png": "dataurl" },
   logLevel: "info",
   plugins: [copyAssets],
 });

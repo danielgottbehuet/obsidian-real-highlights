@@ -75,34 +75,22 @@ body.real-highlights-reading .real-highlights-color-emoji {
   font-size: var(--font-ui-small);
 }
 
-/* Nachbau des Buy-Me-a-Coffee-Knopfs, ohne externes Bild. */
+/* Offizielles Buy-Me-a-Coffee-Banner (eingebettet). */
 .real-highlights-coffee {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
+  display: inline-block;
+  line-height: 0;
   border-radius: 10px;
-  border: 1px solid #000;
-  background-color: #ffdd00;
-  color: #000;
-  font-family: Inter, var(--font-interface);
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  transition: transform 0.1s ease;
 }
 
 .real-highlights-coffee:hover {
-  color: #000;
-  text-decoration: none;
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.real-highlights-coffee-cup {
-  font-size: 18px;
-  line-height: 1;
+.real-highlights-coffee-img {
+  display: block;
+  width: 217px;
+  height: 60px;
 }
 
 .real-highlights-version {
