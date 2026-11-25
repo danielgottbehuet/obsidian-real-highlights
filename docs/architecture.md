@@ -4,8 +4,8 @@
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│ Playground (src/playground)          später: Obsidian-Plugin │
-│   main.ts, MarkerOverlay, editorUtils, lab.ts                │
+│ Obsidian-Plugin (src/obsidian)  ·  Playground/Website (Repo  │
+│   main.ts, settings, integrations   real-highlights-site)    │
 ├──────────────────────────────────────────────────────────────┤
 │ Integrationsschicht (src/shared)                             │
 │   TextMeasurement  – DOM-Ranges → visuelle Zeilen            │
@@ -18,7 +18,7 @@
 └──────────────────────────────────────────────────────────────┘
 ```
 
-Abhängigkeiten zeigen nur nach unten. Die Engine importiert nichts aus `shared` oder `playground` und verwendet keine Browser-APIs; sie läuft unverändert in Node (Tests) und im Browser.
+Abhängigkeiten zeigen nur nach unten. Die Engine importiert nichts aus `shared` oder der Oberfläche und verwendet keine Browser-APIs; sie läuft unverändert in Node (Tests) und im Browser.
 
 ## Module der Engine
 
@@ -90,7 +90,7 @@ Jeder Strich nutzt IDs `${idPrefix}-c|g|f|m` (Clip, Gradient, Filter, Maske). Oh
 
 ## Playground-Integration (Vorlage für Phase 2)
 
-`MarkerOverlay` zeigt das vorgesehene Integrationsmuster:
+`MarkerOverlay` (heute im Repo real-highlights-site) zeigt das vorgesehene Integrationsmuster:
 
 1. Container `position: relative; isolation: isolate` (Papier).
 2. Overlay-Ebene `position: absolute; inset: 0` als erstes Kind, **ohne** `z-index`/`opacity`/`transform` – sonst entstünde ein eigener Stacking Context und `mix-blend-mode: multiply` würde nicht mit dem Papier verrechnet.

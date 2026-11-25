@@ -67,7 +67,7 @@ Obsidians Doku nennt keine Mindestversion für farbige Markierungen. Getestet: *
 ## Prüfung
 
 - **Unit-Tests** (`tests/obsidian/`): Einstellungen (Validierung, Preset-/Theme-Abbildung), Highlight-Erkennung im Live-Preview-DOM, *Markierung umschalten*.
-- **CodeMirror-Testaufbau** (`npm run dev` → `/obsidian-harness.html`): echtes CodeMirror 6 mit derselben Layer-Erweiterung. Ein kleines ViewPlugin bildet Obsidians Highlight-Darstellung nach. Daneben läuft die Reading-Mode-Logik mit Callout und Tabelle. Damit geprüft: mehrzeilige Striche, Callout/Tabelle, fett/kursiv, stabiler Seed bei eingeblendeten `==`, keine Änderung bei Bearbeitung anderer Stellen, Viewport beim Scrollen, Dark Mode, vollständiges Aufräumen beim Ausschalten.
+- **CodeMirror-Testaufbau** (`npm run dev:harness` → http://localhost:5173, Quelle `tests/harness/`): echtes CodeMirror 6 mit derselben Layer-Erweiterung. Ein kleines ViewPlugin bildet Obsidians Highlight-Darstellung nach. Daneben läuft die Reading-Mode-Logik mit Callout und Tabelle. Damit geprüft: mehrzeilige Striche, Callout/Tabelle, fett/kursiv, stabiler Seed bei eingeblendeten `==`, keine Änderung bei Bearbeitung anderer Stellen, Viewport beim Scrollen, Dark Mode, vollständiges Aufräumen beim Ausschalten.
 - **In Obsidian 1.13.7 (macOS)** am 2026-11-25 mit dem Test-Vault, gesteuert über die Obsidian-CLI (`obsidian eval`):
   - Plugin lädt ohne Fehler (`dev:errors` leer).
   - Live Preview und Reading Mode, Light und Dark: alle Sonderfälle der Demo-Notiz korrekt (Überschrift, Listen, Aufgabe, Zitat, Callout, Tabelle, fett/kursiv/Code/Link, Emoji, gleicher Text, kein Highlight in Code).
@@ -127,13 +127,6 @@ Nur die erste Version muss eingereicht werden; spätere Releases werden automati
 
 Bereits umgesetzt für das Review: kein `innerHTML` (eigenes `setMarkup` über `DOMParser`), keine Standard-Tastenkürzel, Befehlsnamen ohne Plugin-Namen, Einstellungsüberschriften über `setHeading()`, Aufräumen beim Entladen.
 
-## Website (GitHub Pages)
+## Website
 
-Landingpage in `src/site/` (Englisch, Light/Dark, mobil), auf der die Engine live läuft. Darunter wird der Playground unter `/playground/` mit veröffentlicht.
-
-```bash
-npm run dev:site      # lokal auf http://localhost:5174
-npm run build:site    # nach dist/pages
-```
-
-Der Workflow `.github/workflows/pages.yml` baut und veröffentlicht die Seite bei jedem Push auf `main` unter https://danielgottbehuet.github.io/obsidian-real-highlights/. Einmalig nötig: im Repo unter *Settings → Pages → Source* „GitHub Actions“ auswählen.
+Landingpage und Playground liegen im eigenen Repo [real-highlights-site](https://github.com/danielgottbehuet/real-highlights-site) und werden dort per GitHub Pages veröffentlicht: https://danielgottbehuet.github.io/real-highlights-site/

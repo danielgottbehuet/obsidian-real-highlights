@@ -7,12 +7,12 @@
  */
 import { EditorState, RangeSetBuilder } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
-import "../obsidian/styles.css";
-import { RenderCache } from "../shared/RenderCache";
-import { renderMarks } from "../obsidian/core/markLayer";
-import { DEFAULT_SETTINGS, currentTheme, settingsToConfig } from "../obsidian/core/pluginConfig";
-import { leadingColorEmoji, markColor } from "../obsidian/core/highlightColors";
-import { livePreviewExtension, refreshMarkersEffect } from "../obsidian/integrations/LivePreview";
+import "../../src/obsidian/styles.css";
+import { RenderCache } from "../../src/shared/RenderCache";
+import { renderMarks } from "../../src/obsidian/core/markLayer";
+import { DEFAULT_SETTINGS, currentTheme, settingsToConfig } from "../../src/obsidian/core/pluginConfig";
+import { leadingColorEmoji, markColor } from "../../src/obsidian/core/highlightColors";
+import { livePreviewExtension, refreshMarkersEffect } from "../../src/obsidian/integrations/LivePreview";
 
 const cache = new RenderCache(500);
 let enabled = true;

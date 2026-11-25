@@ -2,7 +2,7 @@
 
 *(Arbeitstitel: RealMarker)*
 
-Realistische, deterministisch generierte Textmarker-Striche als SVG – zunächst als eigenständiger **Marker Playground** (Phase 1), später als Obsidian-Plugin (Phase 2).
+Realistische, deterministisch generierte Textmarker-Striche als SVG: Rendering-Engine (Phase 1) und Obsidian-Plugin (Phase 2). Playground und Website liegen im Repo [real-highlights-site](https://github.com/danielgottbehuet/real-highlights-site).
 
 Die vollständige Spezifikation steht in [PROJECT.md](../PROJECT.md).
 
@@ -10,38 +10,28 @@ Die vollständige Spezifikation steht in [PROJECT.md](../PROJECT.md).
 
 ```bash
 npm install
-npm run dev        # Playground auf http://localhost:5173
+npm test            # alle Tests
+npm run build       # Typecheck + Plugin-Build nach dist/obsidian
 ```
 
-| Befehl              | Zweck                                              |
-| ------------------- | -------------------------------------------------- |
-| `npm run dev`       | Playground mit Hot Reload starten                  |
-| `npm test`          | Alle automatisierten Tests (Vitest) ausführen      |
-| `npm run typecheck` | TypeScript-Prüfung ohne Ausgabe                    |
-| `npm run build`     | Typecheck + statischer Build nach `dist/playground`|
-| `npm run preview`   | Gebauten Playground lokal ausliefern               |
-| `npm run build:plugin` | Obsidian-Plugin nach `dist/obsidian` bauen      |
-| `npm run dev:plugin`   | Plugin im Watch-Modus bauen                     |
-| `npm run link:vault`   | Plugin per Symlink in `test-vault/` einbinden   |
+| Befehl                 | Zweck                                                        |
+| ---------------------- | ------------------------------------------------------------ |
+| `npm run build`        | Typecheck + Plugin-Build (`main.js`, `manifest.json`, `styles.css`) |
+| `npm run dev:plugin`   | Plugin im Watch-Modus bauen                                  |
+| `npm test`             | Alle automatisierten Tests (Vitest) ausführen                |
+| `npm run typecheck`    | TypeScript-Prüfung ohne Ausgabe                              |
+| `npm run dev:harness`  | CodeMirror-Testaufbau (`tests/harness`) auf http://localhost:5173 |
+| `npm run link:vault`   | Plugin per Symlink in `test-vault/` einbinden                |
 
-Seiten im Playground:
+## Website und Playground
 
-- `/` – **Playground**: editierbarer Text, Parameter, Presets, Vergleiche, Export.
-- `/lab.html` – **Stroke Lab**: große Einzelstriche aller Presets zur Detailbewertung (Kanten, Keilspitze, Fasern).
-- `/obsidian-harness.html` – **Obsidian-Testaufbau**: Live-Preview-Layer in echtem CodeMirror 6 und Reading-Mode-Logik ohne Obsidian.
+Landingpage, Playground und Stroke Lab liegen im eigenen Repo [real-highlights-site](https://github.com/danielgottbehuet/real-highlights-site) (https://danielgottbehuet.github.io/real-highlights-site/). Sie binden die Engine dieses Repos als Abhängigkeit ein, festgelegt auf einen Release-Tag (`"real-highlights": "github:danielgottbehuet/obsidian-real-highlights#<tag>"`). Nach einer Engine-Änderung dort den Tag anheben.
 
-## Playground bedienen
-
-- Text in der Vorschau ist frei editierbar. Text auswählen → **Markieren** (oder ⌘/Ctrl + ⇧ + H), **Entfernen** hebt Markierungen in der Auswahl auf.
-- Linke Leiste: Preset, Farbe (6 Standardfarben + eigene), Blend Mode, alle Rendering-Parameter, Seed-Steuerung, Ebenen/Debug, Export/Import.
-- Toolbar: Schriftart, Schriftgröße, Containerbreite, Realistisch/Klassisch, Light/Dark, Generierungsdauer.
-- Tabelle unter der Vorschau: Länge, Basis-Seed, Zeilenanzahl und Zeilen-Seeds jeder Markierung.
-- Darunter: Klassisch vs. realistisch, alle Presets, alle Farben, kurze/lange/mehrzeilige Markierungen.
-- Einstellungen und Vorschautext werden im `localStorage` gespeichert. **Standardwerte** setzt die Marker-Parameter zurück.
+Grund für die Trennung: Obsidians Community-Scanner prüft jeden Quellcode im Plugin-Repo. Website und Playground sind Browser-Seiten, für die Obsidians Plugin-Regeln (`activeDocument`, `createEl` …) nicht gelten.
 
 ## Engine verwenden
 
-Die Engine (`src/engine`) hat keine Abhängigkeiten zu DOM, Obsidian oder Playground:
+Die Engine (`src/engine`) hat keine Abhängigkeiten zu DOM, Obsidian oder Oberfläche:
 
 ```ts
 import { generateMarker, presetConfig } from "./src/engine";
@@ -65,11 +55,11 @@ Details: [docs/architecture.md](architecture.md) (Module, Schnittstellen, Integr
 ```text
 src/engine/        DOM-unabhängige Rendering-Engine (Kern für Phase 2)
 src/shared/        Integrationsschicht: TextMeasurement (DOM), RenderCache (LRU)
-src/playground/    Playground (index.html, lab.html, obsidian-harness.html, components/)
 src/obsidian/      Obsidian-Plugin „Real Highlights“ (main.ts, settings.ts, core/, integrations/, styles.css)
 manifest.json      Plugin-Manifest (ID real-highlights), dazu versions.json
 test-vault/        Demo-Vault zum Testen des Plugins
-tests/             Vitest: Determinismus, Geometrie, Noise, Renderer, Plugin (tests/obsidian)
+tests/             Vitest: Determinismus, Geometrie, Noise, Renderer, Plugin (tests/obsidian);
+                   CodeMirror-Testaufbau in tests/harness
 docs/              Architektur- und Rendering-Dokumentation
 ```
 

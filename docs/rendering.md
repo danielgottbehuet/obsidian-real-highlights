@@ -70,7 +70,7 @@ Alle Werte werden in `normalizeConfig` geklemmt; NaN/Infinity fallen auf Standar
 - **Luminanzmaske statt mehrerer farbiger Ebenen** – erlaubt helle *und* dunkle Strukturen mit einer Farbe.
 - **`feTurbulence` für die Körnung** – sehr kompakt und mit festem `seed` reproduzierbar. Die Geometrie bleibt vollständig in TypeScript berechnet.
 - **Stroke Lab** (`lab.html`) zusätzlich zum Playground für die Detailbewertung.
-- Struktur: Playground-Komponenten liegen in `src/playground/components/` (MarkerOverlay, editorUtils) statt in getrennten UI-Komponentendateien je Panel.
+- Struktur: Playground und Website liegen im eigenen Repo real-highlights-site (Komponenten MarkerOverlay, editorUtils), damit Obsidians Plugin-Scanner nur Plugin-Code prüft.
 
 ## Bekannte Einschränkungen
 

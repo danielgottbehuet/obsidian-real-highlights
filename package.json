@@ -5,18 +5,15 @@
   "description": "Realistische, deterministische Textmarker-Darstellung (Rendering-Engine + Playground)",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
+    "build": "tsc --noEmit && node esbuild.config.mjs",
+    "dev:plugin": "node esbuild.config.mjs --watch",
+    "build:plugin": "tsc --noEmit && node esbuild.config.mjs",
+    "dev:harness": "vite",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "build:plugin": "tsc --noEmit && node esbuild.config.mjs",
-    "dev:plugin": "node esbuild.config.mjs --watch",
     "link:vault": "mkdir -p test-vault/.obsidian/plugins && ln -sfn ../../../dist/obsidian test-vault/.obsidian/plugins/real-highlights",
-    "version": "node version-bump.mjs && git add manifest.json versions.json",
-    "dev:site": "vite --config vite.site.config.ts",
-    "build:site": "tsc --noEmit && vite build --config vite.site.config.ts && vite build --outDir ../../dist/pages/playground --emptyOutDir"
+    "version": "node version-bump.mjs && git add manifest.json versions.json"
   },
   "devDependencies": {
     "@codemirror/state": "^6.7.6",
