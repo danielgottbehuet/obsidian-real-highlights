@@ -47,14 +47,14 @@ The settings page includes a live preview.
 
 ## Installation
 
-**From Community plugins** (once available): *Settings → Community plugins → Browse*, search for “Real Highlights”, install and enable.
+**From Community plugins** (recommended): *Settings → Community plugins → Browse*, search for “Real Highlights”, install and enable – or [open it directly in Obsidian](obsidian://show-plugin?id=real-highlights).
 
 **Manually:** download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/danielgottbehuet/obsidian-real-highlights/releases/latest), put them into `<your vault>/.obsidian/plugins/real-highlights/`, then enable *Real Highlights* under *Settings → Community plugins*.
 
 ## Compatibility
 
 - Requires Obsidian **1.13.0** or newer (settings use Obsidian's declarative settings API, so they show up in the settings search).
-- Tested on desktop (macOS) with Obsidian 1.13.7 and 1.15.1. Mobile has not been tested yet.
+- Tested on desktop (macOS) with Obsidian 1.15.1. Mobile has not been tested yet.
 - Colored highlights need an Obsidian version that supports them (1.15.1 does, 1.13.7 doesn't). With older versions the color emoji is still detected, but stays visible in Live Preview.
 
 ## Known limitations
