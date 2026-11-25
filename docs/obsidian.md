@@ -116,17 +116,14 @@ git tag 0.1.0 && git push origin 0.1.0
 
 Voraussetzungen: öffentliches Repo, `README.md`, `LICENSE`, `manifest.json` im Wurzelverzeichnis, ein veröffentlichtes Release, dessen Tag der Manifest-Version entspricht.
 
-1. Im Repo [obsidianmd/obsidian-releases](https://github.com/obsidianmd/obsidian-releases) einen Pull Request anlegen, der am Ende von `community-plugins.json` diesen Eintrag ergänzt:
-   ```json
-   {
-     "id": "real-highlights",
-     "name": "Real Highlights",
-     "author": "Daniel Gottbehüt",
-     "description": "Turn ==highlights== into realistic highlighter pen strokes with organic edges, slanted tips and ink texture. Supports highlight colors.",
-     "repo": "danielgottbehuet/obsidian-real-highlights"
-   }
-   ```
-2. Die PR-Vorlage ausfüllen (Checkliste der [Plugin-Richtlinien](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines)). Ein Bot prüft automatisch, danach erfolgt ein manuelles Review.
+Eingereicht wird **nicht mehr per Pull Request** an obsidianmd/obsidian-releases, sondern über das Community-Verzeichnis ([Anleitung](https://docs.obsidian.md/Plugins/Releasing/Submit+your+plugin), Stand 2026-11-25). `community-plugins.json` in obsidian-releases wird nur noch von einem Bot aus diesem Verzeichnis gespiegelt.
+
+1. Auf [community.obsidian.md](https://community.obsidian.md) mit dem Obsidian-Konto anmelden.
+2. Das GitHub-Konto im Profil verknüpfen (damit das Verzeichnis prüfen kann, dass das Repo dir gehört).
+3. „Add your plugin“ wählen und `danielgottbehuet/obsidian-real-highlights` angeben. Das Verzeichnis liest `manifest.json` vom Stand des Standardbranches (`main`) – es muss committet und korrekt sein.
+4. Die Prüfung läuft automatisch; Hinweise erscheinen im Verzeichnis. Korrekturen: Repo anpassen und ein neues Release mit erhöhter Version veröffentlichen. Installierbar ist das Plugin erst, wenn keine Fehler der automatischen Prüfung mehr offen sind.
+
+Nur die erste Version muss eingereicht werden; spätere Releases werden automatisch über GitHub verteilt.
 
 Bereits umgesetzt für das Review: kein `innerHTML` (eigenes `setMarkup` über `DOMParser`), keine Standard-Tastenkürzel, Befehlsnamen ohne Plugin-Namen, Einstellungsüberschriften über `setHeading()`, Aufräumen beim Entladen.
 
