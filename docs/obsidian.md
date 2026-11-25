@@ -91,3 +91,41 @@ Obsidians Doku nennt keine Mindestversion für farbige Markierungen. Getestet: *
 - **Mobile**: Das Manifest erlaubt Mobile (`isDesktopOnly: false`), getestet ist es dort nicht.
 - **Live Preview ohne Farbunterstützung** (z. B. 1.13.7): Das Farb-Emoji bleibt sichtbar. Es auszublenden, würde eigene Editor-Decorations erfordern, und darauf verzichtet das Plugin bewusst. Mit Farbunterstützung (1.15.1) blendet Obsidian es selbst aus.
 - **Nicht im MVP**: individuelles Preset/Seed pro Markierung (erweiterte Syntax), schwebende Werkzeugleiste.
+
+## Release und Veröffentlichung
+
+### Release erstellen
+
+1. Version erhöhen (passt `package.json`, `manifest.json` und `versions.json` an, committet und taggt ohne „v“):
+   ```bash
+   npm version patch
+   ```
+2. Commit und Tag pushen:
+   ```bash
+   git push --follow-tags
+   ```
+3. Der Workflow `.github/workflows/release.yml` führt Tests und Build aus, prüft, dass Tag und `manifest.json`-Version übereinstimmen, und legt einen **Release-Entwurf** mit `main.js`, `manifest.json` und `styles.css` an.
+4. Auf GitHub den Entwurf prüfen, Notizen ergänzen und veröffentlichen.
+
+Für die erste Version 0.1.0 entfällt Schritt 1. Stattdessen den Tag direkt setzen:
+```bash
+git tag 0.1.0 && git push origin 0.1.0
+```
+
+### Als Community-Plugin einreichen
+
+Voraussetzungen: öffentliches Repo, `README.md`, `LICENSE`, `manifest.json` im Wurzelverzeichnis, ein veröffentlichtes Release, dessen Tag der Manifest-Version entspricht.
+
+1. Im Repo [obsidianmd/obsidian-releases](https://github.com/obsidianmd/obsidian-releases) einen Pull Request anlegen, der am Ende von `community-plugins.json` diesen Eintrag ergänzt:
+   ```json
+   {
+     "id": "real-highlights",
+     "name": "Real Highlights",
+     "author": "Daniel Gottbehüt",
+     "description": "Turn ==highlights== into realistic highlighter pen strokes with organic edges, slanted tips and ink texture. Supports highlight colors.",
+     "repo": "danielgottbehuet/obsidian-real-highlights"
+   }
+   ```
+2. Die PR-Vorlage ausfüllen (Checkliste der [Plugin-Richtlinien](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines)). Ein Bot prüft automatisch, danach erfolgt ein manuelles Review.
+
+Bereits umgesetzt für das Review: kein `innerHTML` (eigenes `setMarkup` über `DOMParser`), keine Standard-Tastenkürzel, Befehlsnamen ohne Plugin-Namen, Einstellungsüberschriften über `setHeading()`, Aufräumen beim Entladen.

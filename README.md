@@ -1,79 +1,70 @@
 # Real Highlights
 
-*(Arbeitstitel: RealMarker)*
+Turn your Obsidian `==highlights==` into realistic highlighter pen strokes – with organic edges, slanted chisel tips, ink texture and a little extra ink where the pen touches down.
 
-Realistische, deterministisch generierte Textmarker-Striche als SVG – zunächst als eigenständiger **Marker Playground** (Phase 1), später als Obsidian-Plugin (Phase 2).
+| Obsidian default | Real Highlights |
+| --- | --- |
+| ![Default Obsidian highlights](https://raw.githubusercontent.com/danielgottbehuet/obsidian-real-highlights/main/docs/images/before-light.png) | ![Realistic highlighter strokes](https://raw.githubusercontent.com/danielgottbehuet/obsidian-real-highlights/main/docs/images/after-light.png) |
+| ![Default Obsidian highlights in dark mode](https://raw.githubusercontent.com/danielgottbehuet/obsidian-real-highlights/main/docs/images/before-dark.png) | ![Realistic highlighter strokes in dark mode](https://raw.githubusercontent.com/danielgottbehuet/obsidian-real-highlights/main/docs/images/after-dark.png) |
 
-Die vollständige Spezifikation steht in [PROJECT.md](PROJECT.md).
+## Features
 
-## Schnellstart
+- **Works with the highlights you already have.** Uses Obsidian's native `==highlight==` syntax. Your notes are never changed – disable the plugin and you get the regular highlights back.
+- **Looks like a real pen.** Slightly irregular edges, slanted ends from the chisel tip, subtle fiber texture, ink pooling at the start and end, a small overshoot past the text.
+- **Every highlight is unique – and stays the same.** Strokes are generated procedurally from the highlighted text, so each one looks a little different, but the same highlight always looks identical when you reopen the note. No images are stored.
+- **One stroke per line.** Highlights that wrap across several lines get a separate stroke on every visible line, and adapt when you resize the window.
+- **Highlight colors.** Supports Obsidian's colored highlights (`==🔴text==`, `==🟠text==`, `==🟡text==`, `==🟢text==`, `==🔵text==`, `==🟣text==`) with a highlighter-style pen color for each.
+- **Reading view and Live Preview.** Strokes are drawn behind the text; cursor, selection and line heights are untouched. Source mode stays unchanged.
+- **Light and dark mode.** Ink-like blending on light themes, readable strokes on dark themes.
+- **Five presets:** Classic, Pastel, Dry Marker, Quick Stroke and Heavy Ink.
+- **English and German** interface, following Obsidian's language.
 
-```bash
-npm install
-npm run dev        # Playground auf http://localhost:5173
+## Usage
+
+Highlight text the way you always do:
+
+```markdown
+This is ==important==.
+This is ==🔵a blue highlight==.
 ```
 
-| Befehl              | Zweck                                              |
-| ------------------- | -------------------------------------------------- |
-| `npm run dev`       | Playground mit Hot Reload starten                  |
-| `npm test`          | Alle automatisierten Tests (Vitest) ausführen      |
-| `npm run typecheck` | TypeScript-Prüfung ohne Ausgabe                    |
-| `npm run build`     | Typecheck + statischer Build nach `dist/playground`|
-| `npm run preview`   | Gebauten Playground lokal ausliefern               |
-| `npm run build:plugin` | Obsidian-Plugin nach `dist/obsidian` bauen      |
-| `npm run dev:plugin`   | Plugin im Watch-Modus bauen                     |
-| `npm run link:vault`   | Plugin per Symlink in `test-vault/` einbinden   |
+Commands (assign hotkeys under *Settings → Hotkeys*):
 
-Seiten im Playground:
+- **Toggle highlight** – adds or removes `==` around the selection. Also available in the editor context menu.
+- **Toggle realistic highlights** – switches between realistic strokes and Obsidian's default highlights.
 
-- `/` – **Playground**: editierbarer Text, Parameter, Presets, Vergleiche, Export.
-- `/lab.html` – **Stroke Lab**: große Einzelstriche aller Presets zur Detailbewertung (Kanten, Keilspitze, Fasern).
-- `/obsidian-harness.html` – **Obsidian-Testaufbau**: Live-Preview-Layer in echtem CodeMirror 6 und Reading-Mode-Logik ohne Obsidian.
+## Settings
 
-## Playground bedienen
+- Reading view / Live Preview on or off
+- Preset
+- Default color, plus one pen color for each highlight color
+- Opacity, stroke height, edge roughness, fiber texture and ink intensity
+- Blend mode for light mode; blend mode and opacity for dark mode
 
-- Text in der Vorschau ist frei editierbar. Text auswählen → **Markieren** (oder ⌘/Ctrl + ⇧ + H), **Entfernen** hebt Markierungen in der Auswahl auf.
-- Linke Leiste: Preset, Farbe (6 Standardfarben + eigene), Blend Mode, alle Rendering-Parameter, Seed-Steuerung, Ebenen/Debug, Export/Import.
-- Toolbar: Schriftart, Schriftgröße, Containerbreite, Realistisch/Klassisch, Light/Dark, Generierungsdauer.
-- Tabelle unter der Vorschau: Länge, Basis-Seed, Zeilenanzahl und Zeilen-Seeds jeder Markierung.
-- Darunter: Klassisch vs. realistisch, alle Presets, alle Farben, kurze/lange/mehrzeilige Markierungen.
-- Einstellungen und Vorschautext werden im `localStorage` gespeichert. **Standardwerte** setzt die Marker-Parameter zurück.
+The settings page includes a live preview.
 
-## Engine verwenden
+## Installation
 
-Die Engine (`src/engine`) hat keine Abhängigkeiten zu DOM, Obsidian oder Playground:
+**From Community plugins** (once available): *Settings → Community plugins → Browse*, search for “Real Highlights”, install and enable.
 
-```ts
-import { generateMarker, presetConfig } from "./src/engine";
+**Manually:** download `main.js`, `manifest.json` and `styles.css` from the [latest release](https://github.com/danielgottbehuet/obsidian-real-highlights/releases/latest), put them into `<your vault>/.obsidian/plugins/real-highlights/`, then enable *Real Highlights* under *Settings → Community plugins*.
 
-const result = generateMarker({
-  text: "markierter Text",   // bestimmt den Seed
-  width: 182.4,              // gemessene Breite der Zeile (px)
-  height: 24,                // gemessene Höhe der Zeile (px)
-  ...presetConfig("classic", "#ffe81a"),
-  lineIndex: 0,
-  idPrefix: "rm-42-0",       // eindeutige SVG-IDs im Dokument
-});
+## Compatibility
 
-// result.svg an Position (zeileX + result.offsetX, zeileY + result.offsetY) hinter den Text legen.
-```
+- Requires Obsidian **1.8.7** or newer.
+- Tested on desktop (macOS) with Obsidian 1.13.7 and 1.15.1. Mobile has not been tested yet.
+- Colored highlights need an Obsidian version that supports them (1.15.1 does, 1.13.7 doesn't). With older versions the color emoji is still detected, but stays visible in Live Preview.
 
-Details: [docs/architecture.md](docs/architecture.md) (Module, Schnittstellen, Integration), [docs/rendering.md](docs/rendering.md) (Rendering-Verfahren, Parameter, Entscheidungen, bekannte Einschränkungen) und [docs/obsidian.md](docs/obsidian.md) (Plugin, Installation, Integration).
+## Known limitations
 
-## Projektstruktur
+- Live Preview relies on how Obsidian marks highlights in the editor. If a future Obsidian version changes that, you'll simply see the default highlights until the plugin is updated.
+- Text that looks different in Reading view and Live Preview (for example links with an alias) can get a slightly different stroke in each view.
+- Inline code inside a highlight keeps its own background on top of the stroke.
 
-```text
-src/engine/        DOM-unabhängige Rendering-Engine (Kern für Phase 2)
-src/shared/        Integrationsschicht: TextMeasurement (DOM), RenderCache (LRU)
-src/playground/    Playground (index.html, lab.html, obsidian-harness.html, components/)
-src/obsidian/      Obsidian-Plugin „Real Highlights“ (main.ts, settings.ts, core/, integrations/, styles.css)
-manifest.json      Plugin-Manifest (ID real-highlights), dazu versions.json
-test-vault/        Demo-Vault zum Testen des Plugins
-tests/             Vitest: Determinismus, Geometrie, Noise, Renderer, Plugin (tests/obsidian)
-docs/              Architektur- und Rendering-Dokumentation
-```
+## How it works
 
-## Status
+Each stroke is an SVG generated by a small, deterministic rendering engine: seeded noise for the edges and the slight up-and-down movement of the pen, a pressure model for ink intensity, procedural fibers and paper grain. The seed comes from the highlighted text, the geometry from its actual rendered size. Developer documentation (in German) is in [docs/development.md](docs/development.md).
 
-- **Phase 1** (Engine + Playground): abgeschlossen, visuell freigegeben.
-- **Phase 2** (Obsidian-Plugin): Reading Mode, Live Preview, Einstellungen und Befehle umgesetzt und in Obsidian 1.13.7 geprüft – siehe [docs/obsidian.md](docs/obsidian.md).
+## License
+
+[MIT](LICENSE) © Daniel Gottbehüt

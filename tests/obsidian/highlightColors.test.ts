@@ -95,3 +95,20 @@ describe("Farbige Highlights (==🔴Text==)", () => {
     expect(settingsToConfig(s, "dark", "green").color).toBe(DEFAULT_PALETTE.green);
   });
 });
+
+describe("Markup ohne innerHTML", () => {
+  it("setzt SVG-Markup inkl. korrekter SVG-Groß-/Kleinschreibung", async () => {
+    const { setMarkup, appendMarkedText } = await import("../../src/obsidian/core/markup");
+    const host = document.createElement("div");
+    const r = generateMarker({ text: "x", width: 50, height: 20, idPrefix: "t" });
+    setMarkup(host, `<div style="left:1px">${r.svg}</div>`);
+    const svg = host.querySelector("svg")!;
+    expect(svg.namespaceURI).toBe("http://www.w3.org/2000/svg");
+    expect(host.querySelector("clipPath")).not.toBeNull();
+    expect(host.querySelector("linearGradient")?.getAttribute("gradientUnits")).toBe("userSpaceOnUse");
+    const p = document.createElement("p");
+    appendMarkedText(p, "a <mark>b</mark> c <mark>d</mark>");
+    expect(p.querySelectorAll("mark")).toHaveLength(2);
+    expect(p.textContent).toBe("a b c d");
+  });
+});

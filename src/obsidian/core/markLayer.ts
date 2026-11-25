@@ -7,6 +7,7 @@ import type { MarkerConfig } from "../../engine";
 import type { RenderCache } from "../../shared/RenderCache";
 import { measureLines } from "../../shared/TextMeasurement";
 import { leadingColorEmoji, seedText } from "./highlightColors";
+import { setMarkupIfChanged } from "./markup";
 
 export const ROOT_CLASS = "real-highlights-root";
 export const LAYER_CLASS = "real-highlights-layer";
@@ -120,7 +121,7 @@ export function renderMarks(container: HTMLElement, marks: HTMLElement[], opts: 
       });
     });
     const layer = ensureLayer(root);
-    if (layer.innerHTML !== html) layer.innerHTML = html;
+    setMarkupIfChanged(layer, html);
   });
   return count;
 }

@@ -19,6 +19,7 @@ import type { MarkerConfig } from "../../engine";
 import type { RenderCache } from "../../shared/RenderCache";
 import { mergeLineRects } from "../../shared/TextMeasurement";
 import type { HighlightColor } from "../core/highlightColors";
+import { setMarkup } from "../core/markup";
 import { collectHighlightRuns, rangeForRun } from "./highlightDom";
 
 export interface LivePreviewContext {
@@ -62,7 +63,7 @@ class StrokeMarker implements LayerMarker {
     const el = document.createElement("div");
     el.className = "real-highlights-stroke";
     this.place(el);
-    el.innerHTML = this.svg;
+    setMarkup(el, this.svg);
     return el;
   }
 

@@ -4,6 +4,7 @@ import type { BlendMode, PresetId } from "../engine";
 import { MARKER_COLORS, MARKER_PRESETS } from "../engine";
 import { DEFAULT_PALETTE, HIGHLIGHT_COLORS, HIGHLIGHT_EMOJI, markColor } from "./core/highlightColors";
 import type { MessageKey } from "./core/i18n";
+import { appendMarkedText } from "./core/markup";
 import { nextInstanceId, renderMarks } from "./core/markLayer";
 import {
   DEFAULT_SETTINGS,
@@ -44,10 +45,12 @@ export class RealHighlightsSettingTab extends PluginSettingTab {
     // Live-Vorschau mit derselben Engine
     const wrap = containerEl.createDiv({ cls: "real-highlights-settings-preview markdown-rendered" });
     this.previewEl = wrap.createDiv();
-    const colors = HIGHLIGHT_COLORS.map(
-      (c) => `<mark data-highlight="${c}">${i18n.highlightColor(c)}</mark>`,
-    ).join(" ");
-    this.previewEl.innerHTML = `<p>${t("preview.text")}</p><p>${colors}</p>`;
+    appendMarkedText(this.previewEl.createEl("p"), t("preview.text"));
+    const colorLine = this.previewEl.createEl("p");
+    HIGHLIGHT_COLORS.forEach((c, i) => {
+      if (i > 0) colorLine.appendText(" ");
+      colorLine.createEl("mark", { text: i18n.highlightColor(c), attr: { "data-highlight": c } });
+    });
 
     new Setting(containerEl)
       .setName(t("setting.readingMode.name"))
