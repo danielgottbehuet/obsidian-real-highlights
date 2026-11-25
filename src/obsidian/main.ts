@@ -1,7 +1,6 @@
 import type { EditorView } from "@codemirror/view";
 import type { Editor, Menu } from "obsidian";
-import * as obsidian from "obsidian";
-import { MarkdownView, Plugin, editorLivePreviewField } from "obsidian";
+import { MarkdownView, Plugin, editorLivePreviewField, getLanguage } from "obsidian";
 import type { MarkerConfig } from "../engine";
 import { RenderCache } from "../shared/RenderCache";
 import type { RealHighlightsSettings } from "./core/pluginConfig";
@@ -23,7 +22,7 @@ export default class RealHighlightsPlugin extends Plugin implements ReadingModeH
   readonly cache = new RenderCache(1500);
   readonly sections = new Set<MarkerSection>();
   /** Oberflächensprache folgt der Obsidian-Sprache (Englisch als Standard). */
-  readonly i18n: Translator = createTranslator(resolveLanguage(appLanguage()));
+  readonly i18n: Translator = createTranslator(resolveLanguage(getLanguage()));
 
   async onload(): Promise<void> {
     this.settings = sanitizeSettings(await this.loadData());
@@ -36,6 +35,8 @@ export default class RealHighlightsPlugin extends Plugin implements ReadingModeH
 
     // Theme-/CSS-Wechsel (Light/Dark, Schriftgröße) -> neu zeichnen.
     this.registerEvent(this.app.workspace.on("css-change", () => this.refresh()));
+    // Neue Popout-Fenster erhalten dieselben Body-Klassen wie das Hauptfenster.
+    this.registerEvent(this.app.workspace.on("window-open", (_win, win) => this.applyBodyClasses(win.document)));
 
     this.addCommand({
       id: "toggle-highlight",
@@ -64,7 +65,7 @@ export default class RealHighlightsPlugin extends Plugin implements ReadingModeH
   }
 
   onunload(): void {
-    document.body.classList.remove(BODY_READING, BODY_LIVE);
+    for (const doc of this.windowDocuments()) doc.body.classList.remove(BODY_READING, BODY_LIVE);
     // Sektionen gehören den Ansichten, nicht dem Plugin -> eigene Ebenen explizit entfernen.
     for (const section of [...this.sections]) section.unload();
     this.sections.clear();
@@ -90,10 +91,20 @@ export default class RealHighlightsPlugin extends Plugin implements ReadingModeH
     return settingsToConfig(s, currentTheme(), color);
   }
 
-  private applyBodyClasses(): void {
+  /** Dokumente aller offenen Fenster (Hauptfenster und Popouts). */
+  private windowDocuments(): Set<Document> {
+    const docs = new Set<Document>([this.app.workspace.containerEl.ownerDocument]);
+    this.app.workspace.iterateAllLeaves((leaf) => docs.add(leaf.view.containerEl.ownerDocument));
+    return docs;
+  }
+
+  /** Blendet Obsidians eigene Markierungsfarbe aus, solange Real Highlights zeichnet. */
+  private applyBodyClasses(doc?: Document): void {
     const s = this.settings;
-    document.body.classList.toggle(BODY_READING, s.readingMode);
-    document.body.classList.toggle(BODY_LIVE, s.livePreview);
+    for (const d of doc ? [doc] : this.windowDocuments()) {
+      d.body.classList.toggle(BODY_READING, s.readingMode);
+      d.body.classList.toggle(BODY_LIVE, s.livePreview);
+    }
   }
 
   /** Alle Ansichten neu zeichnen (Einstellungen, Theme). */
@@ -107,11 +118,4 @@ export default class RealHighlightsPlugin extends Plugin implements ReadingModeH
       cm?.dispatch({ effects: refreshMarkersEffect.of(null) });
     });
   }
-}
-
-/** Obsidian-Sprache: getLanguage() (ab 1.8.7), sonst Fallback auf localStorage/HTML-Attribut. */
-function appLanguage(): string {
-  const getLanguage = (obsidian as unknown as { getLanguage?: () => string }).getLanguage;
-  if (typeof getLanguage === "function") return getLanguage();
-  return window.localStorage.getItem("language") ?? document.documentElement.lang ?? "en";
 }

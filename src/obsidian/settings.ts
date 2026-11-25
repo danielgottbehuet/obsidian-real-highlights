@@ -1,11 +1,13 @@
-import type { App } from "obsidian";
-import { PluginSettingTab, Setting } from "obsidian";
+import type { App, SettingDefinitionItem } from "obsidian";
+import { PluginSettingTab } from "obsidian";
 import type { BlendMode, PresetId } from "../engine";
 import { MARKER_COLORS, MARKER_PRESETS } from "../engine";
-import { DEFAULT_PALETTE, HIGHLIGHT_COLORS, HIGHLIGHT_EMOJI, markColor } from "./core/highlightColors";
+import type { HighlightColor } from "./core/highlightColors";
+import { DEFAULT_PALETTE, HIGHLIGHT_COLORS, HIGHLIGHT_EMOJI, isHighlightColor, markColor } from "./core/highlightColors";
 import type { MessageKey } from "./core/i18n";
 import { appendMarkedText } from "./core/markup";
 import { nextInstanceId, renderMarks } from "./core/markLayer";
+import type { RealHighlightsSettings } from "./core/pluginConfig";
 import {
   DEFAULT_SETTINGS,
   anyModeActive,
@@ -26,7 +28,18 @@ const BLEND_OPTIONS: Record<BlendMode, string> = {
   lighten: "Lighten",
 };
 
+/** Virtueller Schlüssel: Auswahl der Standardfarbe aus den Vorgaben. */
+const COLOR_CHOICE = "colorChoice";
+const CUSTOM = "custom";
+const PALETTE_PREFIX = "palette.";
 
+const fmt2 = (v: number) => v.toFixed(2);
+
+/**
+ * Einstellungen über die deklarative Settings-API (Obsidian ≥ 1.13): Obsidian
+ * rendert die Seite selbst und nimmt alle Einträge in die Einstellungssuche auf.
+ * Vorschau und Fußbereich sind `render`-Einträge mit eigener Darstellung.
+ */
 export class RealHighlightsSettingTab extends PluginSettingTab {
   private previewEl: HTMLElement | null = null;
   private readonly previewId = nextInstanceId();
@@ -38,190 +51,240 @@ export class RealHighlightsSettingTab extends PluginSettingTab {
     super(app, plugin);
   }
 
-  display(): void {
-    const { containerEl } = this;
-    containerEl.empty();
-    const s = this.plugin.settings;
-    const i18n = this.plugin.i18n;
-    const t = (key: MessageKey) => i18n.t(key);
+  private t(key: MessageKey): string {
+    return this.plugin.i18n.t(key);
+  }
 
-    // Live-Vorschau mit derselben Engine
-    const wrap = containerEl.createDiv({ cls: "real-highlights-settings-preview markdown-rendered" });
-    this.previewEl = wrap.createDiv();
-    appendMarkedText(this.previewEl.createEl("p"), t("preview.text"));
-    const colorLine = this.previewEl.createEl("p");
+  getSettingDefinitions(): SettingDefinitionItem[] {
+    const t = (key: MessageKey) => this.t(key);
+    const i18n = this.plugin.i18n;
+    const slider = (key: keyof RealHighlightsSettings, min: number, max: number, step: number) =>
+      ({ type: "slider", key, min, max, step, displayFormat: fmt2 }) as const;
+
+    const colorOptions: Record<string, string> = {};
+    for (const c of MARKER_COLORS) colorOptions[c.hex] = i18n.penColor(c.id, c.name);
+    colorOptions[CUSTOM] = t("setting.color.custom");
+
+    return [
+      {
+        name: t("setting.preview.name"),
+        searchable: false,
+        render: (setting) => this.renderPreviewRow(setting.settingEl),
+      },
+      {
+        type: "group",
+        items: [
+          {
+            name: t("setting.readingMode.name"),
+            desc: t("setting.readingMode.desc"),
+            control: { type: "toggle", key: "readingMode" },
+          },
+          {
+            name: t("setting.livePreview.name"),
+            desc: t("setting.livePreview.desc"),
+            control: { type: "toggle", key: "livePreview" },
+          },
+        ],
+      },
+      {
+        type: "group",
+        heading: t("heading.marker"),
+        items: [
+          {
+            name: t("setting.preset.name"),
+            desc: t("setting.preset.desc"),
+            control: {
+              type: "dropdown",
+              key: "preset",
+              options: Object.fromEntries(MARKER_PRESETS.map((p) => [p.id, p.name])),
+            },
+          },
+          {
+            name: t("setting.color.name"),
+            desc: t("setting.color.desc"),
+            control: { type: "dropdown", key: COLOR_CHOICE, options: colorOptions },
+          },
+          {
+            name: t("setting.customColor.name"),
+            control: { type: "color", key: "color" },
+          },
+          { name: t("setting.opacity.name"), control: slider("opacity", 0, 1, 0.01) },
+          {
+            name: t("setting.strokeHeight.name"),
+            desc: t("setting.strokeHeight.desc"),
+            control: slider("strokeHeight", 0.5, 1.4, 0.01),
+          },
+          { name: t("setting.roughness.name"), control: slider("roughness", 0, 1, 0.01) },
+          { name: t("setting.fiberIntensity.name"), control: slider("fiberIntensity", 0, 1, 0.01) },
+          {
+            name: t("setting.inkIntensity.name"),
+            desc: t("setting.inkIntensity.desc"),
+            control: slider("inkIntensity", 0, 2, 0.05),
+          },
+        ],
+      },
+      {
+        type: "group",
+        heading: t("heading.colors"),
+        extraButtons: [
+          (b) =>
+            b
+              .setIcon("rotate-ccw")
+              .setTooltip(t("setting.colors.reset"))
+              .onClick(() => void this.apply({ palette: { ...DEFAULT_PALETTE } }, true)),
+        ],
+        items: [
+          { name: t("setting.colors.syntax.name"), desc: t("heading.colors.desc") },
+          ...HIGHLIGHT_COLORS.map((color) => ({
+            name: `${HIGHLIGHT_EMOJI[color]} ${i18n.highlightColor(color)}`,
+            aliases: [color],
+            control: { type: "color" as const, key: `${PALETTE_PREFIX}${color}` },
+          })),
+        ],
+      },
+      {
+        type: "group",
+        heading: t("heading.light"),
+        items: [
+          {
+            name: t("setting.lightBlend.name"),
+            desc: t("setting.lightBlend.desc"),
+            control: { type: "dropdown", key: "lightBlendMode", options: BLEND_OPTIONS },
+          },
+        ],
+      },
+      {
+        type: "group",
+        heading: t("heading.dark"),
+        items: [
+          {
+            name: t("setting.darkBlend.name"),
+            desc: t("setting.darkBlend.desc"),
+            control: { type: "dropdown", key: "darkBlendMode", options: BLEND_OPTIONS },
+          },
+          {
+            name: t("setting.darkOpacity.name"),
+            desc: t("setting.darkOpacity.desc"),
+            control: slider("darkOpacity", 0.1, 1, 0.01),
+          },
+        ],
+      },
+      {
+        type: "group",
+        items: [
+          {
+            name: t("setting.reset.name"),
+            desc: t("setting.reset.desc"),
+            render: (setting) => {
+              setting.addButton((b) =>
+                b
+                  .setButtonText(t("button.reset"))
+                  .setDestructive()
+                  .onClick(() => void this.apply({ ...DEFAULT_SETTINGS }, true)),
+              );
+            },
+          },
+        ],
+      },
+      {
+        name: t("support.text"),
+        searchable: false,
+        render: (setting) => this.renderFooter(setting.settingEl),
+      },
+    ];
+  }
+
+  getControlValue(key: string): unknown {
+    const s = this.plugin.settings;
+    if (key === COLOR_CHOICE) return MARKER_COLORS.some((c) => c.hex === s.color) ? s.color : CUSTOM;
+    if (key.startsWith(PALETTE_PREFIX)) {
+      const color = key.slice(PALETTE_PREFIX.length);
+      return isHighlightColor(color) ? s.palette[color] : undefined;
+    }
+    return s[key as keyof RealHighlightsSettings];
+  }
+
+  async setControlValue(key: string, value: unknown): Promise<void> {
+    const s = this.plugin.settings;
+    if (key === "preset") {
+      // Ein Preset setzt auch die von ihm abhängigen Regler -> Seite neu aufbauen.
+      const preset = value as PresetId;
+      return this.apply({ preset, ...presetSettingValues(preset) }, true);
+    }
+    if (key === COLOR_CHOICE) {
+      if (value === CUSTOM) return;
+      return this.apply({ color: value as string }, true);
+    }
+    if (key === "color") return this.apply({ color: value as string }, true);
+    if (key.startsWith(PALETTE_PREFIX)) {
+      const color = key.slice(PALETTE_PREFIX.length) as HighlightColor;
+      return this.apply({ palette: { ...s.palette, [color]: value as string } });
+    }
+    return this.apply({ [key]: value });
+  }
+
+  /** Speichert eine Änderung, aktualisiert die Vorschau und bei Bedarf die ganze Seite. */
+  private async apply(patch: Partial<RealHighlightsSettings>, rebuild = false): Promise<void> {
+    await this.plugin.updateSettings(patch);
+    if (rebuild) this.update();
+    this.renderPreview();
+  }
+
+  // -------------------------------------------------------------------------
+  // Eigene Darstellungen
+  // -------------------------------------------------------------------------
+
+  /** Live-Vorschau mit derselben Engine. */
+  private renderPreviewRow(row: HTMLElement): () => void {
+    row.empty();
+    row.addClass("real-highlights-preview-row");
+    const wrap = row.createDiv({ cls: "real-highlights-settings-preview markdown-rendered" });
+    const preview = wrap.createDiv();
+    appendMarkedText(preview.createEl("p"), this.t("preview.text"));
+    const colorLine = preview.createEl("p");
     HIGHLIGHT_COLORS.forEach((c, i) => {
       if (i > 0) colorLine.appendText(" ");
-      colorLine.createEl("mark", { text: i18n.highlightColor(c), attr: { "data-highlight": c } });
+      colorLine.createEl("mark", { text: this.plugin.i18n.highlightColor(c), attr: { "data-highlight": c } });
     });
+    this.previewEl = preview;
+    this.renderPreview();
+    return () => {
+      if (this.previewEl === preview) this.previewEl = null;
+    };
+  }
 
-    new Setting(containerEl)
-      .setName(t("setting.readingMode.name"))
-      .setDesc(t("setting.readingMode.desc"))
-      .addToggle((t) => t.setValue(s.readingMode).onChange((v) => this.patch({ readingMode: v })));
-
-    new Setting(containerEl)
-      .setName(t("setting.livePreview.name"))
-      .setDesc(t("setting.livePreview.desc"))
-      .addToggle((t) => t.setValue(s.livePreview).onChange((v) => this.patch({ livePreview: v })));
-
-    new Setting(containerEl).setName(t("heading.marker")).setHeading();
-
-    new Setting(containerEl)
-      .setName(t("setting.preset.name"))
-      .setDesc(t("setting.preset.desc"))
-      .addDropdown((d) => {
-        for (const p of MARKER_PRESETS) d.addOption(p.id, p.name);
-        d.setValue(s.preset).onChange((v) => {
-          const preset = v as PresetId;
-          this.patch({ preset, ...presetSettingValues(preset) });
-          this.display();
-        });
-      });
-
-    new Setting(containerEl)
-      .setName(t("setting.color.name"))
-      .setDesc(t("setting.color.desc"))
-      .addDropdown((d) => {
-        for (const c of MARKER_COLORS) d.addOption(c.hex, i18n.penColor(c.id, c.name));
-        d.addOption("custom", t("setting.color.custom"));
-        d.setValue(MARKER_COLORS.some((c) => c.hex === s.color) ? s.color : "custom").onChange((v) => {
-          if (v !== "custom") {
-            this.patch({ color: v });
-            this.display();
-          }
-        });
-      })
-      .addColorPicker((c) =>
-        c.setValue(s.color).onChange((v) => {
-          this.patch({ color: v });
-        }),
-      );
-
-    this.slider(t("setting.opacity.name"), "opacity", 0, 1, 0.01);
-    this.slider(t("setting.strokeHeight.name"), "strokeHeight", 0.5, 1.4, 0.01, t("setting.strokeHeight.desc"));
-    this.slider(t("setting.roughness.name"), "roughness", 0, 1, 0.01);
-    this.slider(t("setting.fiberIntensity.name"), "fiberIntensity", 0, 1, 0.01);
-    this.slider(t("setting.inkIntensity.name"), "inkIntensity", 0, 2, 0.05, t("setting.inkIntensity.desc"));
-
-    new Setting(containerEl)
-      .setName(t("heading.colors"))
-      .setDesc(t("heading.colors.desc"))
-      .setHeading();
-    for (const color of HIGHLIGHT_COLORS) {
-      new Setting(containerEl)
-        .setName(`${HIGHLIGHT_EMOJI[color]} ${i18n.highlightColor(color)}`)
-        .addExtraButton((b) =>
-          b
-            .setIcon("rotate-ccw")
-            .setTooltip(t("setting.colors.reset"))
-            .onClick(() => {
-              this.patch({ palette: { ...this.plugin.settings.palette, [color]: DEFAULT_PALETTE[color] } });
-              this.display();
-            }),
-        )
-        .addColorPicker((c) =>
-          c.setValue(s.palette[color]).onChange((v) => {
-            this.patch({ palette: { ...this.plugin.settings.palette, [color]: v } });
-          }),
-        );
-    }
-
-    new Setting(containerEl).setName(t("heading.light")).setHeading();
-    new Setting(containerEl)
-      .setName(t("setting.lightBlend.name"))
-      .setDesc(t("setting.lightBlend.desc"))
-      .addDropdown((d) => {
-        for (const [k, v] of Object.entries(BLEND_OPTIONS)) d.addOption(k, v);
-        d.setValue(s.lightBlendMode).onChange((v) => this.patch({ lightBlendMode: v as BlendMode }));
-      });
-
-    new Setting(containerEl).setName(t("heading.dark")).setHeading();
-    new Setting(containerEl)
-      .setName(t("setting.darkBlend.name"))
-      .setDesc(t("setting.darkBlend.desc"))
-      .addDropdown((d) => {
-        for (const [k, v] of Object.entries(BLEND_OPTIONS)) d.addOption(k, v);
-        d.setValue(s.darkBlendMode).onChange((v) => this.patch({ darkBlendMode: v as BlendMode }));
-      });
-    this.slider(t("setting.darkOpacity.name"), "darkOpacity", 0.1, 1, 0.01, t("setting.darkOpacity.desc"));
-
-    new Setting(containerEl).addButton((b) =>
-      b
-        .setButtonText(t("button.reset"))
-        .setWarning()
-        .onClick(() => {
-          this.patch({ ...DEFAULT_SETTINGS });
-          this.display();
-        }),
-    );
-
-    // Fußbereich: Unterstützungs-Knopf im Buy-Me-a-Coffee-Stil (reines CSS,
-    // lädt nichts aus dem Netz) und Versionsnummer.
+  /** Unterstützungs-Knopf im Buy-Me-a-Coffee-Stil (reines CSS, kein Netzwerkzugriff) und Version. */
+  private renderFooter(row: HTMLElement): void {
+    row.empty();
     const manifest = this.plugin.manifest as typeof this.plugin.manifest & { fundingUrl?: unknown };
     const fundingUrl = typeof manifest.fundingUrl === "string" ? manifest.fundingUrl : FUNDING_URL;
-    const footer = containerEl.createDiv({ cls: "real-highlights-footer" });
-    footer.createDiv({ cls: "real-highlights-support-text", text: t("support.text") });
+    const footer = row.createDiv({ cls: "real-highlights-footer" });
+    footer.createDiv({ cls: "real-highlights-support-text", text: this.t("support.text") });
     const button = footer.createEl("a", {
       cls: "real-highlights-coffee",
       href: fundingUrl,
-      attr: { target: "_blank", rel: "noopener", "aria-label": t("support.link") },
+      attr: { target: "_blank", rel: "noopener", "aria-label": this.t("support.link") },
     });
     button.createSpan({ cls: "real-highlights-coffee-cup", text: "☕" });
-    button.createSpan({ text: t("support.link") });
+    button.createSpan({ text: this.t("support.link") });
     footer.createDiv({ cls: "real-highlights-version", text: `${manifest.name} ${manifest.version}` });
-
-    this.renderPreview();
-  }
-
-  private slider(
-    name: string,
-    key: "opacity" | "strokeHeight" | "roughness" | "fiberIntensity" | "inkIntensity" | "darkOpacity",
-    min: number,
-    max: number,
-    step: number,
-    desc?: string,
-  ): void {
-    const setting = new Setting(this.containerEl).setName(name);
-    if (desc) setting.setDesc(desc);
-    setting.addSlider((sl) =>
-      sl
-        .setLimits(min, max, step)
-        .setValue(this.plugin.settings[key])
-        .setDynamicTooltip()
-        .onChange((v) => this.patch({ [key]: v })),
-    );
-  }
-
-  private patch(patch: Partial<typeof DEFAULT_SETTINGS>): void {
-    void this.plugin.updateSettings(patch);
-    this.renderPreview();
   }
 
   private renderPreview(): void {
     const el = this.previewEl;
     if (!el) return;
     // Erst rendern, wenn der Einstellungsdialog im Layout ist.
-    requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
       if (!el.isConnected) return;
       const s = this.plugin.settings;
-      const marks = Array.from(el.querySelectorAll<HTMLElement>("mark"));
       const active = anyModeActive(s);
       el.parentElement?.toggleClass("real-highlights-preview-off", !active);
-      if (!active) {
-        renderMarks(el, [], { cache: this.plugin.cache, config: () => settingsToConfig(s, "light"), idPrefix: "x" });
-        return;
-      }
+      const marks = active ? Array.from(el.querySelectorAll<HTMLElement>("mark")) : [];
       renderMarks(el, marks, {
         cache: this.plugin.cache,
-        config: (m) => settingsToConfig(s, currentTheme(), markColor(m)),
+        config: (m) => settingsToConfig(s, currentTheme(el.ownerDocument), markColor(m)),
         idPrefix: `rms${this.previewId}`,
       });
     });
-  }
-
-  hide(): void {
-    this.previewEl = null;
-    this.containerEl.empty();
   }
 }

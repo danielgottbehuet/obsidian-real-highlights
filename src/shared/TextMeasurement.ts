@@ -54,11 +54,12 @@ export function measureLines(target: Element | Range, container: Element): LineB
   if (target instanceof Range) {
     range = target;
   } else {
-    range = document.createRange();
+    // Dokument des Elements (nicht das Hauptfenster), damit Popout-Fenster funktionieren.
+    range = target.ownerDocument.createRange();
     range.selectNodeContents(target);
   }
   const origin = container.getBoundingClientRect();
-  const style = getComputedStyle(container);
+  const style = (container.ownerDocument.defaultView ?? window).getComputedStyle(container);
   const ox = origin.left + parseFloat(style.borderLeftWidth || "0") - container.scrollLeft;
   const oy = origin.top + parseFloat(style.borderTopWidth || "0") - container.scrollTop;
 

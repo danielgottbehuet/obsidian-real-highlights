@@ -22,10 +22,7 @@ function ensureLayer(root: HTMLElement): HTMLElement {
   root.classList.add(ROOT_CLASS);
   let layer = root.querySelector<HTMLElement>(`:scope > .${LAYER_CLASS}`);
   if (!layer) {
-    layer = document.createElement("div");
-    layer.className = LAYER_CLASS;
-    layer.setAttribute("aria-hidden", "true");
-    root.insertBefore(layer, root.firstChild);
+    layer = root.createDiv({ cls: LAYER_CLASS, attr: { "aria-hidden": "true" }, prepend: true });
   }
   return layer;
 }
@@ -63,13 +60,12 @@ export const COLOR_EMOJI_CLASS = "real-highlights-color-emoji";
 export function wrapColorEmoji(mark: HTMLElement): void {
   if (mark.querySelector(`.${COLOR_EMOJI_CLASS}`)) return;
   const first = mark.firstChild;
-  if (!(first instanceof Text)) return;
+  if (!first?.instanceOf(Text)) return;
   const lead = leadingColorEmoji(first.data);
   if (!lead) return;
-  const rest = first.splitText(lead.emoji.length);
-  const span = mark.ownerDocument.createElement("span");
-  span.className = COLOR_EMOJI_CLASS;
-  mark.insertBefore(span, rest);
+  first.splitText(lead.emoji.length);
+  // Span vor das Emoji setzen und das Emoji hineinverschieben.
+  const span = mark.createSpan({ cls: COLOR_EMOJI_CLASS, prepend: true });
   span.appendChild(first);
 }
 

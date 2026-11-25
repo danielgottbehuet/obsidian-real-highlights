@@ -5,3 +5,6 @@ dist/
 # Test-Vault: nur Notizen und Plugin-Liste versionieren
 test-vault/.obsidian/*
 !test-vault/.obsidian/community-plugins.json
+
+# Build-Ausgabe des Plugins (gehört ins Release, nicht ins Repo)
+/main.js

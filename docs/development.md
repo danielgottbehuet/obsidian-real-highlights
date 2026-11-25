@@ -18,6 +18,7 @@ npm run build       # Typecheck + Plugin-Build nach dist/obsidian
 | ---------------------- | ------------------------------------------------------------ |
 | `npm run build`        | Typecheck + Plugin-Build (`main.js`, `manifest.json`, `styles.css`) |
 | `npm run dev:plugin`   | Plugin im Watch-Modus bauen                                  |
+| `npm run lint`         | ESLint mit den Regeln des Obsidian-Community-Scanners        |
 | `npm test`             | Alle automatisierten Tests (Vitest) ausführen                |
 | `npm run typecheck`    | TypeScript-Prüfung ohne Ausgabe                              |
 | `npm run dev:harness`  | CodeMirror-Testaufbau (`tests/harness`) auf http://localhost:5173 |
@@ -55,7 +56,8 @@ Details: [docs/architecture.md](architecture.md) (Module, Schnittstellen, Integr
 ```text
 src/engine/        DOM-unabhängige Rendering-Engine (Kern für Phase 2)
 src/shared/        Integrationsschicht: TextMeasurement (DOM), RenderCache (LRU)
-src/obsidian/      Obsidian-Plugin „Real Highlights“ (main.ts, settings.ts, core/, integrations/, styles.css)
+src/obsidian/      Obsidian-Plugin „Real Highlights“ (main.ts, settings.ts, core/, integrations/)
+styles.css         Plugin-Stylesheet (wie manifest.json im Hauptordner)
 manifest.json      Plugin-Manifest (ID real-highlights), dazu versions.json
 test-vault/        Demo-Vault zum Testen des Plugins
 tests/             Vitest: Determinismus, Geometrie, Noise, Renderer, Plugin (tests/obsidian);

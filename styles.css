@@ -63,9 +63,10 @@ body.real-highlights-reading .real-highlights-color-emoji {
 
 /* Fußbereich der Einstellungen: Kaffee-Knopf und Version */
 .real-highlights-footer {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid var(--background-modifier-border);
+  /* Füllt die ganze Zeile der Einstellung, damit der Inhalt zentriert ist. */
+  flex: 1 1 auto;
+  width: 100%;
+  padding: 4px 0;
   display: flex;
   flex-direction: column;
   align-items: center;

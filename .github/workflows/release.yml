@@ -1,5 +1,6 @@
-# Baut das Plugin bei einem Versions-Tag (z. B. 0.1.0, ohne "v") und legt einen
-# Release-Entwurf mit main.js, manifest.json und styles.css an.
+# Baut das Plugin bei einem Versions-Tag (z. B. 0.1.2, ohne "v"), attestiert die
+# Herkunft der Release-Dateien und legt einen Release-Entwurf mit main.js,
+# manifest.json und styles.css an.
 name: Release
 
 on:
@@ -8,26 +9,32 @@ on:
       - "*"
 
 permissions:
-  contents: write
+  contents: write # Release anlegen
+  id-token: write # Signatur der Attestierung (Sigstore)
+  attestations: write # Attestierung speichern
+  artifact-metadata: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       - run: npm ci
+
+      - name: Lint (Regeln des Obsidian-Scanners)
+        run: npm run lint
 
       - name: Tests
         run: npm test
 
       - name: Build
-        run: npm run build:plugin
+        run: npm run build
 
       - name: Tag und Manifest-Version prüfen
         run: |
@@ -38,6 +45,14 @@ jobs:
             exit 1
           fi
 
+      - name: Herkunft der Release-Dateien attestieren
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: |
+            main.js
+            manifest.json
+            styles.css
+
       - name: Release-Entwurf anlegen
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,4 +61,4 @@ jobs:
             --title "$GITHUB_REF_NAME" \
             --draft \
             --generate-notes \
-            dist/obsidian/main.js manifest.json dist/obsidian/styles.css
+            main.js manifest.json styles.css

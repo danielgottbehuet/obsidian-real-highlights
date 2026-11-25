@@ -26,17 +26,10 @@ export function setMarkupIfChanged(el: HTMLElement, markup: string): void {
  * DOM auf, ohne HTML zu parsen.
  */
 export function appendMarkedText(parent: HTMLElement, text: string, attrs: Record<string, string> = {}): void {
-  const doc = parent.ownerDocument;
   const parts = text.split(/<mark>(.*?)<\/mark>/);
   parts.forEach((part, i) => {
     if (!part) return;
-    if (i % 2 === 1) {
-      const mark = doc.createElement("mark");
-      for (const [k, v] of Object.entries(attrs)) mark.setAttribute(k, v);
-      mark.textContent = part;
-      parent.appendChild(mark);
-    } else {
-      parent.appendChild(doc.createTextNode(part));
-    }
+    if (i % 2 === 1) parent.createEl("mark", { text: part, attr: attrs });
+    else parent.appendText(part);
   });
 }

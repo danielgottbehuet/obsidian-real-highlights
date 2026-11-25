@@ -5,9 +5,10 @@
  *   cm-formatting-highlight, == ausgeblendet außer bei Cursor in der Markierung).
  * - Reading Mode: dieselbe renderMarks-Logik wie MarkerSection.
  */
+import "../setup/obsidianDom";
 import { EditorState, RangeSetBuilder } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
-import "../../src/obsidian/styles.css";
+import "../../styles.css";
 import { RenderCache } from "../../src/shared/RenderCache";
 import { renderMarks } from "../../src/obsidian/core/markLayer";
 import { DEFAULT_SETTINGS, currentTheme, settingsToConfig } from "../../src/obsidian/core/pluginConfig";

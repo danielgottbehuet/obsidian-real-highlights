@@ -1,5 +1,7 @@
 /**
- * Baut das Obsidian-Plugin nach dist/obsidian (main.js, manifest.json, styles.css).
+ * Baut das Obsidian-Plugin: main.js im Hauptordner (wie das offizielle
+ * Beispiel-Plugin; dort sucht die Build-Verifikation des Community-Verzeichnisses)
+ * und eine vollständige Kopie mit manifest.json und styles.css in dist/obsidian.
  *
  *   node esbuild.config.mjs            einmaliger Produktionsbuild
  *   node esbuild.config.mjs --watch    Watch-Modus für die Entwicklung
@@ -14,6 +16,7 @@ import { join } from "node:path";
 const watch = process.argv.includes("--watch");
 const outDir = "dist/obsidian";
 const targets = [outDir, process.env.OBSIDIAN_PLUGIN_DIR].filter(Boolean);
+const outfile = "main.js";
 
 const copyAssets = {
   name: "copy-assets",
@@ -23,8 +26,8 @@ const copyAssets = {
       for (const dir of targets) {
         mkdirSync(dir, { recursive: true });
         copyFileSync("manifest.json", join(dir, "manifest.json"));
-        copyFileSync("src/obsidian/styles.css", join(dir, "styles.css"));
-        if (dir !== outDir) copyFileSync(join(outDir, "main.js"), join(dir, "main.js"));
+        copyFileSync("styles.css", join(dir, "styles.css"));
+        copyFileSync(outfile, join(dir, "main.js"));
       }
       console.log(`[real-highlights] build ok -> ${targets.join(", ")}`);
     });
@@ -34,7 +37,7 @@ const copyAssets = {
 const ctx = await esbuild.context({
   entryPoints: ["src/obsidian/main.ts"],
   bundle: true,
-  outfile: join(outDir, "main.js"),
+  outfile,
   format: "cjs",
   platform: "browser",
   target: "es2020",

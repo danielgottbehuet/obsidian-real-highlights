@@ -53,7 +53,7 @@ The settings page includes a live preview.
 
 ## Compatibility
 
-- Requires Obsidian **1.8.7** or newer.
+- Requires Obsidian **1.13.0** or newer (settings use Obsidian's declarative settings API, so they show up in the settings search).
 - Tested on desktop (macOS) with Obsidian 1.13.7 and 1.15.1. Mobile has not been tested yet.
 - Colored highlights need an Obsidian version that supports them (1.15.1 does, 1.13.7 doesn't). With older versions the color emoji is still detected, but stays visible in Live Preview.
 

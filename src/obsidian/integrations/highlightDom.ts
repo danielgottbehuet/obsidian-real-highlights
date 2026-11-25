@@ -58,13 +58,13 @@ export function collectHighlightRuns(root: Element): HighlightRun[] {
     const formatting = el.closest(`.${FORMATTING}`);
     if (formatting) {
       // Schließendes `==` beendet die Markierung, andere Formatierung (z. B. `**`) wird übersprungen.
-      if (formatting.classList.contains(FORMATTING_HIGHLIGHT) && cur && (cur as HighlightRun).text.length > 0) close();
+      if (formatting.classList.contains(FORMATTING_HIGHLIGHT) && cur && cur.text.length > 0) close();
       continue;
     }
 
     const color = classColor(el) ?? classColor(hl);
     // Farbwechsel ohne Text dazwischen = zwei direkt aufeinanderfolgende Markierungen.
-    if (cur && color !== (cur as HighlightRun).color && !(pendingColor && color === null)) close();
+    if (cur && color !== cur.color && !(pendingColor && color === null)) close();
 
     let offset = 0;
     if (!cur) {

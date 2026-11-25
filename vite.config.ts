@@ -11,6 +11,8 @@ export default defineConfig({
   test: {
     root: import.meta.dirname,
     include: ["tests/**/*.test.ts"],
+    // Obsidians DOM-Helfer (createDiv, instanceOf …) für jsdom-Tests nachbilden.
+    setupFiles: ["tests/setup/obsidianDom.ts"],
     environment: "node",
   },
 });

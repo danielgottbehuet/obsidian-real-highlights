@@ -37,7 +37,11 @@ export class MarkerSection extends MarkdownRenderChild {
     this.host.sections.add(this);
     this.observer = new ResizeObserver(() => this.schedule());
     this.observer.observe(this.containerEl);
-    this.containerEl.ownerDocument.fonts?.ready.then(() => this.schedule());
+    // Nach dem Laden von Webfonts neu messen; ein Fehler dabei ist unkritisch.
+    this.containerEl.ownerDocument.fonts?.ready.then(
+      () => this.schedule(),
+      () => undefined,
+    );
     this.schedule();
   }
 

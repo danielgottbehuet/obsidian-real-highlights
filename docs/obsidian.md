@@ -5,7 +5,8 @@ Plugin-ID: `real-highlights` · Name: **Real Highlights** · Projekt-Arbeitstite
 ## Build und Installation
 
 ```bash
-npm run build:plugin     # Typecheck + Build nach dist/obsidian (main.js, manifest.json, styles.css)
+npm run build            # Typecheck + Build: main.js im Hauptordner, Kopie samt manifest.json und styles.css in dist/obsidian
+npm run lint             # ESLint mit den Regeln des Obsidian-Community-Scanners
 npm run dev:plugin       # Watch-Modus (mit Sourcemaps)
 ```
 
@@ -24,7 +25,7 @@ OBSIDIAN_PLUGIN_DIR="<Vault>/.obsidian/plugins/real-highlights" npm run dev:plug
 - Darstellung nativer `==Markierungen==` im **Reading Mode** und im **Live Preview**. Der **Source Mode** bleibt unverändert.
 - **Farbige Markierungen** nach [Obsidian-Syntax](https://obsidian.md/help/syntax#Highlight+colors): `==🔴Text==`, `==🟠Text==`, `==🟡Text==`, `==🟢Text==`, `==🔵Text==`, `==🟣Text==`. Jede Farbe hat eine eigene, einstellbare Markerfarbe. Ohne Emoji gilt die Standardfarbe.
 - Die Markdown-Dateien werden nicht verändert. Nach dem Deaktivieren erscheint wieder die normale Obsidian-Markierung.
-- Einstellungen mit Live-Vorschau: An/Aus je Modus (Reading Mode, Live Preview), Preset, Standardfarbe (6 Vorgaben + eigene), Markerfarben der sechs Obsidian-Farben, Deckkraft, Strichhöhe, Kantenunregelmäßigkeit, Faserstruktur, Tintenintensität, Mischmodus Light/Dark, Deckkraftfaktor Dark, Zurücksetzen.
+- Einstellungen über Obsidians deklarative Settings-API (`getSettingDefinitions`, ab 1.13; alle Einträge erscheinen in der Einstellungssuche), mit Live-Vorschau: An/Aus je Modus (Reading Mode, Live Preview), Preset, Standardfarbe (6 Vorgaben + eigene), Markerfarben der sechs Obsidian-Farben, Deckkraft, Strichhöhe, Kantenunregelmäßigkeit, Faserstruktur, Tintenintensität, Mischmodus Light/Dark, Deckkraftfaktor Dark, Zurücksetzen.
 - **Zweisprachig**: Die Oberfläche folgt der Obsidian-Sprache (`getLanguage()`): Deutsch bei deutscher Oberfläche, sonst Englisch. Ein eigener Sprachschalter ist nicht nötig. Texte in `core/i18n.ts`.
 - Befehle (Tastenkürzel frei zuweisbar): *Markierung umschalten*, *Realistische Markierungen ein-/ausschalten* (schaltet beide Modi gemeinsam: ist einer aktiv, werden beide aus-, sonst beide eingeschaltet).
 - Einen globalen An/Aus-Schalter gibt es bewusst nicht: Das übernimmt Obsidian unter *Community-Plugins*. Abweichung von PROJECT.md §17, dort „aktivieren oder deaktivieren“ – abgedeckt durch die Modus-Schalter und den Befehl. Gespeichertes `enabled: false` älterer Plugin-Versionen wird beim Laden auf „beide Modi aus“ migriert. *Markierung umschalten* steht auch im Editor-Kontextmenü bei markiertem Text.
@@ -80,7 +81,7 @@ Obsidians Doku nennt keine Mindestversion für farbige Markierungen. Getestet: *
 
 ## Bekannte Einschränkungen und offene Punkte
 
-- **minAppVersion 1.8.7** wegen `getLanguage()`. Getestet sind nur 1.13.7 und 1.15.1.
+- **minAppVersion 1.13.0** (seit 0.1.2) wegen der deklarativen Einstellungs-API (`getSettingDefinitions`, `setDestructive`). Ältere Obsidian-Versionen erhalten über `versions.json` weiterhin 0.1.1 (minAppVersion 1.8.7). Getestet sind 1.13.7 und 1.15.1.
 - **Englische Oberfläche** ist per Unit-Test geprüft, in Obsidian selbst wurde nur die deutsche angesehen (die App läuft auf Deutsch).
 
 - **Abhängigkeit von Obsidians DOM** (in 1.13.7 und 1.15.1 bestätigt): Live Preview erwartet die Klassen `cm-highlight`, `cm-formatting` und `cm-formatting-highlight`, für Farben `cm-highlight-<farbe>`; Reading Mode `mark[data-highlight]`. Ändert Obsidian diese Klassen, werden im Live Preview keine Striche gezeichnet, und es erscheint wieder die native Markierung. Das Plugin fällt also ohne Fehler auf die Standardanzeige zurück.
@@ -104,7 +105,7 @@ Obsidians Doku nennt keine Mindestversion für farbige Markierungen. Getestet: *
    ```bash
    git push --follow-tags
    ```
-3. Der Workflow `.github/workflows/release.yml` führt Tests und Build aus, prüft, dass Tag und `manifest.json`-Version übereinstimmen, und legt einen **Release-Entwurf** mit `main.js`, `manifest.json` und `styles.css` an.
+3. Der Workflow `.github/workflows/release.yml` führt Lint (Scanner-Regeln), Tests und Build aus, prüft, dass Tag und `manifest.json`-Version übereinstimmen, **attestiert die Herkunft** von `main.js`, `manifest.json` und `styles.css` (`actions/attest-build-provenance`, prüfbar mit `gh attestation verify <datei> --repo danielgottbehuet/obsidian-real-highlights`) und legt einen **Release-Entwurf** mit diesen drei Dateien an.
 4. Auf GitHub den Entwurf prüfen, Notizen ergänzen und veröffentlichen.
 
 Für die erste Version 0.1.0 entfällt Schritt 1. Stattdessen den Tag direkt setzen:

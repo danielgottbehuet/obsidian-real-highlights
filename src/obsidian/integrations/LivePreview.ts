@@ -60,8 +60,7 @@ class StrokeMarker implements LayerMarker {
   }
 
   draw(): HTMLElement {
-    const el = document.createElement("div");
-    el.className = "real-highlights-stroke";
+    const el = createDiv({ cls: "real-highlights-stroke" });
     this.place(el);
     setMarkup(el, this.svg);
     return el;

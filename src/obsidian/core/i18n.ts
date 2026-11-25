@@ -14,6 +14,7 @@ const en = {
     "A physical highlighter never leaves a perfect rectangle. <mark>The edges are slightly irregular</mark>, " +
     "the ends are slanted, and <mark>where the pen touches down, a little more ink collects</mark>.",
 
+  "setting.preview.name": "Preview",
   "setting.readingMode.name": "Reading view",
   "setting.readingMode.desc": "Show realistic strokes instead of the regular highlight while reading.",
   "setting.livePreview.name": "Live Preview",
@@ -25,6 +26,7 @@ const en = {
   "setting.color.name": "Default color",
   "setting.color.desc": "For ==highlights== without a color.",
   "setting.color.custom": "Custom color",
+  "setting.customColor.name": "Color",
   "setting.opacity.name": "Opacity",
   "setting.strokeHeight.name": "Stroke height",
   "setting.strokeHeight.desc": "Relative to the line height.",
@@ -35,7 +37,8 @@ const en = {
 
   "heading.colors": "Highlight colors",
   "heading.colors.desc": "Pen colors for Obsidian's colored highlights: ==🔴text==, ==🟠text==, ==🟡text==, ==🟢text==, ==🔵text==, ==🟣text==.",
-  "setting.colors.reset": "Restore default color",
+  "setting.colors.reset": "Restore default colors",
+  "setting.colors.syntax.name": "Syntax",
 
   "heading.light": "Light mode",
   "setting.lightBlend.name": "Blend mode",
@@ -46,7 +49,9 @@ const en = {
   "setting.darkOpacity.name": "Opacity factor",
   "setting.darkOpacity.desc": "Multiplies the opacity in dark mode.",
 
-  "button.reset": "Reset settings",
+  "setting.reset.name": "Reset settings",
+  "setting.reset.desc": "Restores all settings to their defaults.",
+  "button.reset": "Reset",
 
   "support.text": "Enjoying Real Highlights?",
   "support.link": "Buy me a coffee",
@@ -62,6 +67,7 @@ const de: Record<MessageKey, string> = {
     "Ein physischer Textmarker hinterlässt keine perfekte Fläche. <mark>Die Kanten sind leicht unregelmäßig</mark>, " +
     "die Enden schräg, und <mark>dort, wo der Marker ansetzt, sammelt sich etwas mehr Tinte</mark>.",
 
+  "setting.preview.name": "Vorschau",
   "setting.readingMode.name": "Leseansicht",
   "setting.readingMode.desc": "Realistische Striche statt der normalen Markierung beim Lesen.",
   "setting.livePreview.name": "Live Preview",
@@ -73,6 +79,7 @@ const de: Record<MessageKey, string> = {
   "setting.color.name": "Standardfarbe",
   "setting.color.desc": "Für ==Markierungen== ohne Farbangabe.",
   "setting.color.custom": "Eigene Farbe",
+  "setting.customColor.name": "Farbe",
   "setting.opacity.name": "Deckkraft",
   "setting.strokeHeight.name": "Strichhöhe",
   "setting.strokeHeight.desc": "Relativ zur Zeilenhöhe.",
@@ -83,7 +90,8 @@ const de: Record<MessageKey, string> = {
 
   "heading.colors": "Farbige Markierungen",
   "heading.colors.desc": "Markerfarben für die farbigen Obsidian-Markierungen: ==🔴Text==, ==🟠Text==, ==🟡Text==, ==🟢Text==, ==🔵Text==, ==🟣Text==.",
-  "setting.colors.reset": "Standardfarbe wiederherstellen",
+  "setting.colors.reset": "Standardfarben wiederherstellen",
+  "setting.colors.syntax.name": "Syntax",
 
   "heading.light": "Light Mode",
   "setting.lightBlend.name": "Mischmodus",
@@ -94,7 +102,9 @@ const de: Record<MessageKey, string> = {
   "setting.darkOpacity.name": "Deckkraftfaktor",
   "setting.darkOpacity.desc": "Multipliziert die Deckkraft im Dark Mode.",
 
-  "button.reset": "Einstellungen zurücksetzen",
+  "setting.reset.name": "Einstellungen zurücksetzen",
+  "setting.reset.desc": "Setzt alle Einstellungen auf die Standardwerte zurück.",
+  "button.reset": "Zurücksetzen",
 
   "support.text": "Gefällt dir Real Highlights?",
   "support.link": "Spendier mir einen Kaffee",

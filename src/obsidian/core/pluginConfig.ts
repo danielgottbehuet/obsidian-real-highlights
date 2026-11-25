@@ -134,6 +134,6 @@ export function toggleAllModes(s: RealHighlightsSettings): Pick<RealHighlightsSe
 }
 
 /** Aktuelles Obsidian-Theme anhand der Body-Klasse. */
-export function currentTheme(doc: Document = document): Theme {
+export function currentTheme(doc: Document = activeDocument): Theme {
   return doc.body.classList.contains("theme-dark") ? "dark" : "light";
 }
