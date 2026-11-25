@@ -156,16 +156,20 @@ export class RealHighlightsSettingTab extends PluginSettingTab {
         }),
     );
 
-    // Dezenter Unterstützungs-Link (reiner Textlink, lädt nichts aus dem Netz).
-    const funding = (this.plugin.manifest as { fundingUrl?: unknown }).fundingUrl;
-    const fundingUrl = typeof funding === "string" ? funding : FUNDING_URL;
-    const support = containerEl.createDiv({ cls: "real-highlights-support" });
-    support.appendText(`${t("support.text")} `);
-    support.createEl("a", {
-      text: `☕ ${t("support.link")}`,
+    // Fußbereich: Unterstützungs-Knopf im Buy-Me-a-Coffee-Stil (reines CSS,
+    // lädt nichts aus dem Netz) und Versionsnummer.
+    const manifest = this.plugin.manifest as typeof this.plugin.manifest & { fundingUrl?: unknown };
+    const fundingUrl = typeof manifest.fundingUrl === "string" ? manifest.fundingUrl : FUNDING_URL;
+    const footer = containerEl.createDiv({ cls: "real-highlights-footer" });
+    footer.createDiv({ cls: "real-highlights-support-text", text: t("support.text") });
+    const button = footer.createEl("a", {
+      cls: "real-highlights-coffee",
       href: fundingUrl,
-      attr: { target: "_blank", rel: "noopener" },
+      attr: { target: "_blank", rel: "noopener", "aria-label": t("support.link") },
     });
+    button.createSpan({ cls: "real-highlights-coffee-cup", text: "☕" });
+    button.createSpan({ text: t("support.link") });
+    footer.createDiv({ cls: "real-highlights-version", text: `${manifest.name} ${manifest.version}` });
 
     this.renderPreview();
   }

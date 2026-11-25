@@ -61,12 +61,50 @@ body.real-highlights-reading .real-highlights-color-emoji {
   background-color: var(--highlight-background, var(--text-highlight-bg));
 }
 
-/* Unterstützungs-Link am Ende der Einstellungen */
-.real-highlights-support {
+/* Fußbereich der Einstellungen: Kaffee-Knopf und Version */
+.real-highlights-footer {
   margin-top: 24px;
-  padding-top: 12px;
+  padding-top: 16px;
   border-top: 1px solid var(--background-modifier-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
   color: var(--text-muted);
   font-size: var(--font-ui-small);
-  text-align: center;
+}
+
+/* Nachbau des Buy-Me-a-Coffee-Knopfs, ohne externes Bild. */
+.real-highlights-coffee {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: 1px solid #000;
+  background-color: #ffdd00;
+  color: #000;
+  font-family: Inter, var(--font-interface);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.real-highlights-coffee:hover {
+  color: #000;
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.real-highlights-coffee-cup {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.real-highlights-version {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-faint);
 }

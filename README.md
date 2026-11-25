@@ -7,6 +7,8 @@ Turn your Obsidian `==highlights==` into realistic highlighter pen strokes – w
 | ![Default Obsidian highlights](https://raw.githubusercontent.com/danielgottbehuet/obsidian-real-highlights/main/docs/images/before-light.png) | ![Realistic highlighter strokes](https://raw.githubusercontent.com/danielgottbehuet/obsidian-real-highlights/main/docs/images/after-light.png) |
 | ![Default Obsidian highlights in dark mode](https://raw.githubusercontent.com/danielgottbehuet/obsidian-real-highlights/main/docs/images/before-dark.png) | ![Realistic highlighter strokes in dark mode](https://raw.githubusercontent.com/danielgottbehuet/obsidian-real-highlights/main/docs/images/after-dark.png) |
 
+**[Try it live in your browser →](https://danielgottbehuet.github.io/obsidian-real-highlights/)**
+
 ## Features
 
 - **Works with the highlights you already have.** Uses Obsidian's native `==highlight==` syntax. Your notes are never changed – disable the plugin and you get the regular highlights back.

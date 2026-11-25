@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real Highlights – realistic highlighter strokes for Obsidian</title>
+    <meta
+      name="description"
+      content="An Obsidian plugin that turns ==highlights== into realistic highlighter pen strokes with organic edges, slanted tips and ink texture."
+    />
+    <meta property="og:title" content="Real Highlights for Obsidian" />
+    <meta
+      property="og:description"
+      content="Turn your Obsidian highlights into realistic highlighter pen strokes."
+    />
+    <meta
+      property="og:image"
+      content="https://raw.githubusercontent.com/danielgottbehuet/obsidian-real-highlights/main/docs/images/after-light.png"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <a class="wordmark" href="#top"><span class="wm-mark">Real</span> Highlights</a>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#try">Try it</a>
+        <a href="#install">Install</a>
+        <a href="https://github.com/danielgottbehuet/obsidian-real-highlights">GitHub</a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-copy marked">
+          <p class="eyebrow">Obsidian plugin</p>
+          <h1>Highlights that look like <mark>ink on paper</mark>.</h1>
+          <p class="lead">
+            Real Highlights turns your <code>==highlights==</code> into realistic highlighter pen strokes – organic edges,
+            slanted chisel tips, a little extra ink where the pen touches down.
+          </p>
+          <div class="cta">
+            <a class="button primary" href="#install">Install</a>
+            <a class="button" href="https://github.com/danielgottbehuet/obsidian-real-highlights">View on GitHub</a>
+          </div>
+        </div>
+
+        <figure class="note-card">
+          <div class="note-toolbar">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <div class="segmented" id="compare" role="group" aria-label="Compare">
+              <button data-mode="classic">Obsidian default</button>
+              <button data-mode="realistic" class="active">Real Highlights</button>
+            </div>
+          </div>
+          <div class="note marked" id="hero-note">
+            <h3>Reading notes</h3>
+            <p>
+              Reading is easier when <mark>the important ideas stand out</mark> at a glance. A physical highlighter never
+              leaves a perfect rectangle: <mark>the edges are slightly irregular</mark>, the ends are slanted, and
+              <mark>where the pen touches down, a little more ink collects</mark>.
+            </p>
+            <p>
+              <mark>Long passages that wrap across several lines get their own stroke on every visible line, just like a
+              real pen on a printed page.</mark>
+            </p>
+            <p>
+              Colors: <mark data-color="red">urgent</mark>, <mark data-color="orange">follow up</mark>,
+              <mark data-color="yellow">remember</mark>, <mark data-color="green">done</mark>,
+              <mark data-color="blue">reference</mark> and <mark data-color="purple">idea</mark>.
+            </p>
+          </div>
+        </figure>
+      </section>
+
+      <!-- Features -->
+      <section class="section" id="features">
+        <h2 class="marked"><mark>Why</mark> it feels real</h2>
+        <div class="features">
+          <article class="feature marked">
+            <h3>Works with what you have</h3>
+            <p>
+              Uses Obsidian's native <code>==highlight==</code> syntax. <mark>Your notes are never changed</mark> – turn the
+              plugin off and the regular highlights come back.
+            </p>
+          </article>
+          <article class="feature marked">
+            <h3>Unique, yet stable</h3>
+            <p>
+              Every stroke is generated from the highlighted text: <mark>each one looks different</mark>, but the same
+              highlight always looks <mark>exactly the same</mark> when you reopen a note. No images are stored.
+            </p>
+          </article>
+          <article class="feature marked">
+            <h3>One stroke per line</h3>
+            <p>
+              <mark>Highlights that wrap get a separate stroke on every visible line and adapt when the window is
+              resized.</mark>
+            </p>
+          </article>
+          <article class="feature marked">
+            <h3>Reading view &amp; Live Preview</h3>
+            <p>
+              Strokes are drawn <mark>behind the text</mark>. Cursor, selection and line heights stay untouched; source
+              mode stays as it is.
+            </p>
+          </article>
+          <article class="feature marked">
+            <h3>Highlight colors</h3>
+            <p>
+              Supports Obsidian's colored highlights like <code>==🔴text==</code> with a pen color for each:
+              <mark data-color="red">red</mark>, <mark data-color="green">green</mark> or
+              <mark data-color="blue">blue</mark>.
+            </p>
+          </article>
+          <article class="feature marked">
+            <h3>Light &amp; dark</h3>
+            <p>
+              Ink-like blending on light themes, <mark>readable strokes on dark themes</mark>. English and German
+              interface.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- Presets -->
+      <section class="section">
+        <h2 class="marked">Five <mark>presets</mark></h2>
+        <div class="presets" id="presets"></div>
+      </section>
+
+      <!-- Try it -->
+      <section class="section" id="try">
+        <h2 class="marked"><mark>Try it</mark> yourself</h2>
+        <div class="try">
+          <div class="try-controls">
+            <label>
+              Your text
+              <textarea id="try-text" rows="4" spellcheck="false">Type anything here and watch it get highlighted.</textarea>
+            </label>
+            <div class="try-row">
+              <label>
+                Preset
+                <select id="try-preset"></select>
+              </label>
+              <label>
+                Color
+                <select id="try-color"></select>
+              </label>
+            </div>
+            <p class="hint">Same text, same stroke – change a letter and the stroke changes.</p>
+          </div>
+          <div class="note try-output marked" id="try-output"><p><mark></mark></p></div>
+        </div>
+        <p class="more">
+          Want every parameter? Open the <a href="./playground/">full playground</a>.
+        </p>
+      </section>
+
+      <!-- Install -->
+      <section class="section" id="install">
+        <h2 class="marked"><mark>Install</mark></h2>
+        <div class="install">
+          <article>
+            <h3>Community plugins</h3>
+            <p class="badge">Coming soon</p>
+            <p>Once approved: <em>Settings → Community plugins → Browse</em>, search for “Real Highlights”, install and enable.</p>
+          </article>
+          <article>
+            <h3>BRAT (beta)</h3>
+            <p>
+              Install the <em>BRAT</em> plugin, run <em>“Add a beta plugin for testing”</em> and enter
+              <code>danielgottbehuet/obsidian-real-highlights</code>. You'll get updates automatically.
+            </p>
+          </article>
+          <article>
+            <h3>Manual</h3>
+            <p>
+              Download <code>main.js</code>, <code>manifest.json</code> and <code>styles.css</code> from the
+              <a href="https://github.com/danielgottbehuet/obsidian-real-highlights/releases/latest">latest release</a>
+              into <code>.obsidian/plugins/real-highlights/</code> and enable the plugin.
+            </p>
+          </article>
+        </div>
+        <p class="compat">Requires Obsidian 1.8.7 or newer. Tested on desktop (macOS) with 1.13.7 and 1.15.1.</p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Enjoying Real Highlights?</p>
+      <a class="coffee" href="https://buymeacoffee.com/derscottbert"><span>☕</span> Buy me a coffee</a>
+      <p class="small">
+        <a href="https://github.com/danielgottbehuet/obsidian-real-highlights">GitHub</a> ·
+        <a href="https://github.com/danielgottbehuet/obsidian-real-highlights/blob/main/LICENSE">MIT License</a> ·
+        © Daniel Gottbehüt · Not affiliated with Obsidian.
+      </p>
+    </footer>
+
+    <script type="module" src="./site.ts"></script>
+  </body>
+</html>

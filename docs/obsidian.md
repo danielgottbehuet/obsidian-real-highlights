@@ -129,3 +129,14 @@ Voraussetzungen: öffentliches Repo, `README.md`, `LICENSE`, `manifest.json` im 
 2. Die PR-Vorlage ausfüllen (Checkliste der [Plugin-Richtlinien](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines)). Ein Bot prüft automatisch, danach erfolgt ein manuelles Review.
 
 Bereits umgesetzt für das Review: kein `innerHTML` (eigenes `setMarkup` über `DOMParser`), keine Standard-Tastenkürzel, Befehlsnamen ohne Plugin-Namen, Einstellungsüberschriften über `setHeading()`, Aufräumen beim Entladen.
+
+## Website (GitHub Pages)
+
+Landingpage in `src/site/` (Englisch, Light/Dark, mobil), auf der die Engine live läuft. Darunter wird der Playground unter `/playground/` mit veröffentlicht.
+
+```bash
+npm run dev:site      # lokal auf http://localhost:5174
+npm run build:site    # nach dist/pages
+```
+
+Der Workflow `.github/workflows/pages.yml` baut und veröffentlicht die Seite bei jedem Push auf `main` unter https://danielgottbehuet.github.io/obsidian-real-highlights/. Einmalig nötig: im Repo unter *Settings → Pages → Source* „GitHub Actions“ auswählen.
