@@ -1,4 +1,4 @@
-import type { MarkerConfig } from "./MarkerOptions";
+import type { BlendMode, MarkerConfig } from "./MarkerOptions";
 import { DEFAULT_CONFIG, normalizeConfig } from "./MarkerOptions";
 
 export type PresetId = "classic" | "pastel" | "dry" | "quick" | "heavy";
@@ -123,12 +123,20 @@ export type Theme = "light" | "dark";
  * Dunkel: Multiply würde die Farbe auf dunklem Grund nahezu auslöschen. Daher
  * normale Überblendung mit reduzierter Deckkraft, damit heller Text lesbar bleibt.
  */
-export function adaptConfigForTheme(cfg: MarkerConfig, theme: Theme): MarkerConfig {
+export interface ThemeAdaptOptions {
+  /** Faktor für die Deckkraft im Dark Mode (Standard 0.5). */
+  darkOpacityFactor?: number;
+  /** Mischmodus im Dark Mode (Standard "normal"). */
+  darkBlendMode?: BlendMode;
+}
+
+export function adaptConfigForTheme(cfg: MarkerConfig, theme: Theme, options: ThemeAdaptOptions = {}): MarkerConfig {
   if (theme === "light") return cfg;
+  const factor = Number.isFinite(options.darkOpacityFactor) ? (options.darkOpacityFactor as number) : 0.5;
   return {
     ...cfg,
-    blendMode: "normal",
-    opacity: Math.min(1, cfg.opacity * 0.5),
+    blendMode: options.darkBlendMode ?? "normal",
+    opacity: Math.min(1, Math.max(0, cfg.opacity * factor)),
     // Hellere Fehlstellen wirken auf dunklem Grund wie Schmutz -> dezenter.
     fiberIntensity: cfg.fiberIntensity * 0.35,
     inkGrain: cfg.inkGrain * 0.3,

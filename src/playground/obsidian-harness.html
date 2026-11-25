@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Real Highlights – Obsidian-Testaufbau</title>
+    <style>
+      body { margin: 0; font: 16px/1.6 -apple-system, sans-serif; background: #fff; color: #222; }
+      body.theme-dark { background: #1e1e1e; color: #dcddde; }
+      .bar { padding: 8px 16px; border-bottom: 1px solid #8884; display: flex; gap: 12px; font-size: 13px; }
+      .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 16px; }
+      h3 { font-size: 12px; text-transform: uppercase; opacity: .6; margin: 0 0 6px; }
+      .cm-editor { border: 1px solid #8884; border-radius: 6px; height: 360px; }
+      .cm-scroller { font-family: inherit !important; line-height: 1.6 !important; }
+      .cm-content { padding: 12px 8px; }
+      .cm-highlight { background-color: rgba(255, 208, 0, .4); }
+      .markdown-rendered { border: 1px solid #8884; border-radius: 6px; padding: 4px 16px; }
+      .markdown-rendered mark { background-color: rgba(255, 208, 0, .4); color: inherit; }
+      .callout { background: rgba(8, 109, 221, .1); border-radius: 4px; padding: 8px 12px; margin: 8px 0; }
+      .callout-title { font-weight: 600; }
+      table { border-collapse: collapse; } td { border: 1px solid #8886; padding: 4px 8px; background: #8881; }
+    </style>
+  </head>
+  <body class="real-highlights-live real-highlights-reading">
+    <div class="bar">
+      <label><input type="checkbox" id="dark" /> Dark</label>
+      <label><input type="checkbox" id="enabled" checked /> Real Highlights aktiv</label>
+      <span id="info"></span>
+    </div>
+    <div class="cols">
+      <div>
+        <h3>Live Preview (CodeMirror 6 + Layer)</h3>
+        <div id="editor" class="markdown-source-view mod-cm6 is-live-preview"></div>
+      </div>
+      <div>
+        <h3>Reading Mode (Post-Processor-Logik)</h3>
+        <div class="markdown-rendered" id="reading"></div>
+      </div>
+    </div>
+    <script type="module" src="./obsidian-harness.ts"></script>
+  </body>
+</html>

@@ -13,6 +13,7 @@ export default defineConfig({
       input: {
         main: resolve(root, "index.html"),
         lab: resolve(root, "lab.html"),
+        obsidianHarness: resolve(root, "obsidian-harness.html"),
       },
     },
   },

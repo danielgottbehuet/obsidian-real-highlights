@@ -1,5 +1,5 @@
 {
-  "name": "realmarker",
+  "name": "real-highlights",
   "version": "0.1.0",
   "private": true,
   "description": "Realistische, deterministische Textmarker-Darstellung (Rendering-Engine + Playground)",
@@ -10,11 +10,18 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:plugin": "tsc --noEmit && node esbuild.config.mjs",
+    "dev:plugin": "node esbuild.config.mjs --watch",
+    "link:vault": "mkdir -p test-vault/.obsidian/plugins && ln -sfn ../../../dist/obsidian test-vault/.obsidian/plugins/real-highlights"
   },
   "devDependencies": {
+    "@codemirror/state": "^6.7.6",
+    "@codemirror/view": "^6.43.13",
     "@types/node": "^26.6.10",
+    "esbuild": "^0.28.2",
     "jsdom": "^31.0.1",
+    "obsidian": "^1.14.4",
     "typescript": "^7.0.2",
     "vite": "^8.3.8",
     "vitest": "^5.1.2"

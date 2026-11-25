@@ -1,4 +1,6 @@
-# RealMarker
+# Real Highlights
+
+*(Arbeitstitel: RealMarker)*
 
 Realistische, deterministisch generierte Textmarker-Striche als SVG – zunächst als eigenständiger **Marker Playground** (Phase 1), später als Obsidian-Plugin (Phase 2).
 
@@ -18,11 +20,15 @@ npm run dev        # Playground auf http://localhost:5173
 | `npm run typecheck` | TypeScript-Prüfung ohne Ausgabe                    |
 | `npm run build`     | Typecheck + statischer Build nach `dist/playground`|
 | `npm run preview`   | Gebauten Playground lokal ausliefern               |
+| `npm run build:plugin` | Obsidian-Plugin nach `dist/obsidian` bauen      |
+| `npm run dev:plugin`   | Plugin im Watch-Modus bauen                     |
+| `npm run link:vault`   | Plugin per Symlink in `test-vault/` einbinden   |
 
 Seiten im Playground:
 
 - `/` – **Playground**: editierbarer Text, Parameter, Presets, Vergleiche, Export.
 - `/lab.html` – **Stroke Lab**: große Einzelstriche aller Presets zur Detailbewertung (Kanten, Keilspitze, Fasern).
+- `/obsidian-harness.html` – **Obsidian-Testaufbau**: Live-Preview-Layer in echtem CodeMirror 6 und Reading-Mode-Logik ohne Obsidian.
 
 ## Playground bedienen
 
@@ -52,18 +58,22 @@ const result = generateMarker({
 // result.svg an Position (zeileX + result.offsetX, zeileY + result.offsetY) hinter den Text legen.
 ```
 
-Details: [docs/architecture.md](docs/architecture.md) (Module, Schnittstellen, Integration) und [docs/rendering.md](docs/rendering.md) (Rendering-Verfahren, Parameter, Entscheidungen, bekannte Einschränkungen).
+Details: [docs/architecture.md](docs/architecture.md) (Module, Schnittstellen, Integration), [docs/rendering.md](docs/rendering.md) (Rendering-Verfahren, Parameter, Entscheidungen, bekannte Einschränkungen) und [docs/obsidian.md](docs/obsidian.md) (Plugin, Installation, Integration).
 
 ## Projektstruktur
 
 ```text
 src/engine/        DOM-unabhängige Rendering-Engine (Kern für Phase 2)
 src/shared/        Integrationsschicht: TextMeasurement (DOM), RenderCache (LRU)
-src/playground/    Playground (index.html, lab.html, main.ts, components/)
-tests/             Vitest: Determinismus, Geometrie, Noise, Renderer
+src/playground/    Playground (index.html, lab.html, obsidian-harness.html, components/)
+src/obsidian/      Obsidian-Plugin „Real Highlights“ (main.ts, settings.ts, core/, integrations/, styles.css)
+manifest.json      Plugin-Manifest (ID real-highlights), dazu versions.json
+test-vault/        Demo-Vault zum Testen des Plugins
+tests/             Vitest: Determinismus, Geometrie, Noise, Renderer, Plugin (tests/obsidian)
 docs/              Architektur- und Rendering-Dokumentation
 ```
 
 ## Status
 
-Phase 1 ist technisch umgesetzt und bereit zur visuellen Evaluation. Die Obsidian-Integration (Phase 2) beginnt erst nach Freigabe.
+- **Phase 1** (Engine + Playground): abgeschlossen, visuell freigegeben.
+- **Phase 2** (Obsidian-Plugin): Reading Mode, Live Preview, Einstellungen und Befehle umgesetzt und in Obsidian 1.13.7 geprüft – siehe [docs/obsidian.md](docs/obsidian.md).
