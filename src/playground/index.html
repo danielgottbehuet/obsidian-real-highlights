@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RealMarker Playground</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <header class="brand">
+          <h1>RealMarker</h1>
+          <span class="version" id="version"></span>
+        </header>
+
+        <section class="panel">
+          <h2>Preset &amp; Farbe</h2>
+          <label class="field">
+            <span>Preset</span>
+            <select id="preset"></select>
+          </label>
+          <div class="swatches" id="swatches"></div>
+          <label class="field">
+            <span>Eigene Farbe</span>
+            <input type="color" id="color" />
+          </label>
+          <label class="field">
+            <span>Blend Mode</span>
+            <select id="blend">
+              <option value="auto">Automatisch (Theme)</option>
+              <option value="multiply">multiply</option>
+              <option value="normal">normal</option>
+              <option value="screen">screen</option>
+              <option value="darken">darken</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="panel">
+          <h2>Parameter</h2>
+          <div id="params"></div>
+        </section>
+
+        <section class="panel">
+          <h2>Seed</h2>
+          <div class="seed-info">
+            <div><span class="muted">Automatisch</span> <code id="auto-seed">–</code></div>
+            <div><span class="muted">Effektiv</span> <code id="effective-seed">–</code></div>
+          </div>
+          <label class="field">
+            <span>Override</span>
+            <input type="text" id="seed-override" placeholder="leer = aus Text" inputmode="numeric" />
+          </label>
+          <div class="row">
+            <button id="new-variant" title="Neuen Seed ableiten">Neue Variante</button>
+            <button id="clear-seed">Auto</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Ebenen &amp; Debug</h2>
+          <div class="checks" id="layers"></div>
+          <label class="check"><input type="checkbox" id="debug" /> Debug (Kontrollpunkte, Kontur)</label>
+        </section>
+
+        <section class="panel">
+          <h2>Export</h2>
+          <div class="grid2">
+            <button id="export-svg">SVG exportieren</button>
+            <button id="export-json">JSON exportieren</button>
+            <button id="import-json">JSON importieren</button>
+            <button id="copy-json">Config kopieren</button>
+          </div>
+          <input type="file" id="import-file" accept="application/json,.json" hidden />
+          <button id="reset" class="danger">Standardwerte</button>
+        </section>
+      </aside>
+
+      <main class="main">
+        <div class="toolbar">
+          <div class="group">
+            <button id="mark-btn" class="primary" title="Auswahl markieren (⌘/Ctrl + M)">Markieren</button>
+            <button id="unmark-btn" title="Markierung der Auswahl entfernen">Entfernen</button>
+          </div>
+          <div class="group">
+            <label>Schrift
+              <select id="font">
+                <option value="system">System Sans</option>
+                <option value="serif">Serif</option>
+                <option value="mono">Monospace</option>
+                <option value="rounded">Rounded</option>
+              </select>
+            </label>
+            <label>Größe <input type="range" id="font-size" min="11" max="44" step="1" /><output id="font-size-out"></output></label>
+            <label>Breite <input type="range" id="width" min="160" max="1100" step="1" /><output id="width-out"></output></label>
+          </div>
+          <div class="group">
+            <div class="segmented" id="mode">
+              <button data-value="realistic">Realistisch</button>
+              <button data-value="classic">Klassisch</button>
+            </div>
+            <div class="segmented" id="theme">
+              <button data-value="light">Light</button>
+              <button data-value="dark">Dark</button>
+            </div>
+          </div>
+          <div class="stats" id="stats"></div>
+        </div>
+
+        <section class="stage">
+          <h2>Vorschau <span class="hint">Text ist editierbar · Text auswählen und „Markieren“</span></h2>
+          <div class="paper" id="editor-root">
+            <div class="text" id="editor" contenteditable="true" spellcheck="false"></div>
+          </div>
+          <table class="marks-table" id="marks-table"></table>
+        </section>
+
+        <section class="stage">
+          <h2>Klassisch vs. realistisch</h2>
+          <div class="compare-grid">
+            <div>
+              <div class="caption">Klassische Rechteckmarkierung</div>
+              <div class="paper" id="cmp-classic"><div class="text"></div></div>
+            </div>
+            <div>
+              <div class="caption">RealMarker</div>
+              <div class="paper" id="cmp-real"><div class="text"></div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="stage">
+          <h2>Presets im Vergleich</h2>
+          <div id="preset-rows"></div>
+        </section>
+
+        <section class="stage">
+          <h2>Farben</h2>
+          <div class="paper" id="colors-root"><div class="text"></div></div>
+        </section>
+
+        <section class="stage">
+          <h2>Kurze, lange und mehrzeilige Markierungen</h2>
+          <div class="paper" id="lengths-root"><div class="text"></div></div>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

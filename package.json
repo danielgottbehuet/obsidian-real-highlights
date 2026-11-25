@@ -1,0 +1,22 @@
+{
+  "name": "realmarker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Realistische, deterministische Textmarker-Darstellung (Rendering-Engine + Playground)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.10",
+    "jsdom": "^31.0.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.2"
+  }
+}

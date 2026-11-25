@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>RealMarker Stroke Lab</title>
+    <style>
+      body { margin: 0; font: 13px -apple-system, sans-serif; background: #e9e9e6; }
+      .bar { position: sticky; top: 0; background: #fff; padding: 8px 14px; border-bottom: 1px solid #ddd; display: flex; gap: 14px; align-items: center; z-index: 2; }
+      .sheet { isolation: isolate; position: relative; background: #fdfdfb; margin: 14px; border-radius: 6px; overflow: hidden; }
+      .sheet.dark { background: #1e1e1e; }
+      .label { position: absolute; left: 10px; color: #888; font-size: 11px; }
+      .word { position: absolute; white-space: nowrap; font-family: Georgia, serif; color: #1f2125; }
+      .dark .word { color: #dcddde; }
+      .stroke { position: absolute; }
+      .stroke svg { display: block; }
+    </style>
+  </head>
+  <body>
+    <div class="bar">
+      <strong>Stroke Lab</strong>
+      <label>Zeilenhöhe <input id="h" type="range" min="14" max="120" value="64" /></label>
+      <label>Seed-Offset <input id="s" type="number" value="0" style="width:60px" /></label>
+      <label><input id="dark" type="checkbox" /> Dark</label>
+      <label><input id="debug" type="checkbox" /> Debug</label>
+      <a href="./index.html">← Playground</a>
+    </div>
+    <div id="sheets"></div>
+    <script type="module" src="./lab.ts"></script>
+  </body>
+</html>

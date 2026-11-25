@@ -1,0 +1,377 @@
+:root {
+  --ui-bg: #f3f3f1;
+  --ui-panel: #ffffff;
+  --ui-border: #e2e2de;
+  --ui-text: #24262b;
+  --ui-muted: #7a7d85;
+  --ui-accent: #3b5bdb;
+  --paper: #fdfdfb;
+  --ink: #1f2125;
+  --font-size: 19px;
+  --text-width: 640px;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  color-scheme: light;
+}
+
+body.dark {
+  --ui-bg: #17181b;
+  --ui-panel: #1f2024;
+  --ui-border: #2e3036;
+  --ui-text: #e4e5e8;
+  --ui-muted: #8b8e96;
+  --ui-accent: #7c93ff;
+  --paper: #1e1e1e;
+  --ink: #dcddde;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--ui-bg);
+  color: var(--ui-text);
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+  border-right: 1px solid var(--ui-border);
+  background: var(--ui-panel);
+  padding: 14px 14px 40px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+}
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.brand h1 {
+  font-size: 17px;
+  margin: 0;
+}
+.version {
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+.panel {
+  border-top: 1px solid var(--ui-border);
+  padding: 10px 0 12px;
+}
+.panel h2 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ui-muted);
+  margin: 0 0 8px;
+}
+.field {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+}
+.field > span {
+  color: var(--ui-muted);
+}
+.param {
+  display: grid;
+  grid-template-columns: 1fr 44px;
+  gap: 0 8px;
+  margin: 4px 0 8px;
+}
+.param label {
+  font-size: 12px;
+}
+.param output {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--ui-muted);
+  font-size: 12px;
+}
+.param input {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 2px 0 0;
+}
+input[type="range"] {
+  accent-color: var(--ui-accent);
+}
+select,
+input[type="text"],
+button {
+  font: inherit;
+  color: inherit;
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  padding: 5px 8px;
+}
+input[type="color"] {
+  width: 100%;
+  height: 28px;
+  padding: 0 2px;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  background: var(--ui-bg);
+}
+button {
+  cursor: pointer;
+}
+button:hover {
+  border-color: var(--ui-muted);
+}
+button.primary {
+  background: var(--ui-accent);
+  border-color: var(--ui-accent);
+  color: #fff;
+}
+button.danger {
+  width: 100%;
+  margin-top: 8px;
+}
+.row {
+  display: flex;
+  gap: 6px;
+}
+.row button {
+  flex: 1;
+}
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.swatches {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0 8px;
+}
+.swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  padding: 0;
+}
+.swatch.active {
+  border-color: var(--ui-text);
+}
+.checks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 3px 0;
+}
+.seed-info {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 6px;
+}
+.muted {
+  color: var(--ui-muted);
+  display: inline-block;
+  width: 84px;
+}
+code {
+  font: 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ---------- Main ---------- */
+.main {
+  padding: 0 28px 60px;
+  min-width: 0;
+}
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  padding: 12px 0;
+  background: var(--ui-bg);
+  border-bottom: 1px solid var(--ui-border);
+}
+.toolbar .group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ui-muted);
+}
+.toolbar output {
+  min-width: 42px;
+  font-variant-numeric: tabular-nums;
+}
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--ui-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.segmented button {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.segmented button.active {
+  background: var(--ui-text);
+  color: var(--ui-bg);
+}
+.stats {
+  margin-left: auto;
+  color: var(--ui-muted);
+  font-variant-numeric: tabular-nums;
+}
+.stage {
+  margin-top: 26px;
+}
+.stage h2 {
+  font-size: 13px;
+  margin: 0 0 10px;
+}
+.hint {
+  font-weight: normal;
+  color: var(--ui-muted);
+  margin-left: 8px;
+}
+.caption {
+  color: var(--ui-muted);
+  margin-bottom: 6px;
+}
+.compare-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.preset-row {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.preset-row .name {
+  font-weight: 600;
+}
+.preset-row .desc {
+  color: var(--ui-muted);
+  font-size: 11px;
+}
+
+/* ---------- Papier & Text ---------- */
+.paper {
+  /* Eigener Stacking Context: Multiply verrechnet sich mit dem Papier, nicht mit der UI. */
+  isolation: isolate;
+  position: relative;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  padding: 22px 26px;
+  width: min(100%, calc(var(--text-width) + 54px));
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  line-height: 1.65;
+}
+.paper .text {
+  position: relative; /* malt nach (über) der Marker-Ebene */
+  outline: none;
+  overflow-wrap: break-word;
+}
+.paper .text p {
+  margin: 0 0 0.8em;
+}
+.paper .text p:last-child {
+  margin-bottom: 0;
+}
+.paper .text:focus {
+  outline: none;
+}
+
+.rm-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Bewusst kein z-index: sonst entstünde ein eigener Stacking Context ohne Multiply-Wirkung. */
+}
+.rm-line {
+  position: absolute;
+}
+.rm-line > svg {
+  display: block;
+}
+
+/* Native <mark> neutralisieren – die Darstellung übernimmt die SVG-Ebene. */
+.rm-root[data-rm-mode="realistic"] mark {
+  background: transparent;
+  color: inherit;
+}
+/* Klassische Vergleichsmarkierung. */
+.rm-root[data-rm-mode="classic"] mark,
+.classic-only mark {
+  background: color-mix(in srgb, var(--mark-color, #ffe81a) 75%, transparent);
+  color: inherit;
+}
+body.dark .rm-root[data-rm-mode="classic"] mark {
+  background: color-mix(in srgb, var(--mark-color, #ffe81a) 38%, transparent);
+}
+
+.marks-table {
+  margin-top: 10px;
+  border-collapse: collapse;
+  font-size: 12px;
+  color: var(--ui-muted);
+}
+.marks-table td {
+  padding: 2px 14px 2px 0;
+  font-variant-numeric: tabular-nums;
+}
+.marks-table td:first-child {
+  color: var(--ui-text);
+  max-width: 340px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toast {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ui-text);
+  color: var(--ui-bg);
+  padding: 8px 14px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+}
