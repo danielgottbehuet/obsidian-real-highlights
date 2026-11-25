@@ -47,6 +47,9 @@ const en = {
   "setting.darkOpacity.desc": "Multiplies the opacity in dark mode.",
 
   "button.reset": "Reset settings",
+
+  "support.text": "Enjoying Real Highlights?",
+  "support.link": "Buy me a coffee",
 };
 
 export type MessageKey = keyof typeof en;
@@ -92,6 +95,9 @@ const de: Record<MessageKey, string> = {
   "setting.darkOpacity.desc": "Multipliziert die Deckkraft im Dark Mode.",
 
   "button.reset": "Einstellungen zurücksetzen",
+
+  "support.text": "Gefällt dir Real Highlights?",
+  "support.link": "Spendier mir einen Kaffee",
 };
 
 const HIGHLIGHT_COLOR_NAMES: Record<Language, Record<HighlightColor, string>> = {

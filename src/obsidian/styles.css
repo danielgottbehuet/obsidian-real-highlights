@@ -60,3 +60,13 @@ body.real-highlights-reading .real-highlights-color-emoji {
 .real-highlights-settings-preview.real-highlights-preview-off mark {
   background-color: var(--highlight-background, var(--text-highlight-bg));
 }
+
+/* Unterstützungs-Link am Ende der Einstellungen */
+.real-highlights-support {
+  margin-top: 24px;
+  padding-top: 12px;
+  border-top: 1px solid var(--background-modifier-border);
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  text-align: center;
+}

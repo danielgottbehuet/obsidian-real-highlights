@@ -15,6 +15,9 @@ import {
 } from "./core/pluginConfig";
 import type RealHighlightsPlugin from "./main";
 
+/** Fallback, falls das Manifest keine fundingUrl liefert. */
+const FUNDING_URL = "https://buymeacoffee.com/derscottbert";
+
 const BLEND_OPTIONS: Record<BlendMode, string> = {
   multiply: "Multiply",
   normal: "Normal",
@@ -152,6 +155,17 @@ export class RealHighlightsSettingTab extends PluginSettingTab {
           this.display();
         }),
     );
+
+    // Dezenter Unterstützungs-Link (reiner Textlink, lädt nichts aus dem Netz).
+    const funding = (this.plugin.manifest as { fundingUrl?: unknown }).fundingUrl;
+    const fundingUrl = typeof funding === "string" ? funding : FUNDING_URL;
+    const support = containerEl.createDiv({ cls: "real-highlights-support" });
+    support.appendText(`${t("support.text")} `);
+    support.createEl("a", {
+      text: `☕ ${t("support.link")}`,
+      href: fundingUrl,
+      attr: { target: "_blank", rel: "noopener" },
+    });
 
     this.renderPreview();
   }
