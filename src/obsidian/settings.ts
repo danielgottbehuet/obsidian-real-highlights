@@ -45,6 +45,7 @@ const fmt2 = (v: number) => v.toFixed(2);
 export class RealHighlightsSettingTab extends PluginSettingTab {
   private previewEl: HTMLElement | null = null;
   private readonly previewId = nextInstanceId();
+  private previewFrame = 0;
 
   constructor(
     app: App,
@@ -249,8 +250,18 @@ export class RealHighlightsSettingTab extends PluginSettingTab {
       colorLine.createEl("mark", { text: this.plugin.i18n.highlightColor(c), attr: { "data-highlight": c } });
     });
     this.previewEl = preview;
+    // Beim (erneuten) Öffnen ist der Dialog im ersten Frame oft noch nicht in
+    // seiner endgültigen Breite. Bei jeder Größenänderung neu messen, sonst
+    // bleiben die Striche an den Zeilen eines veralteten Layouts stehen.
+    const observer = new ResizeObserver(() => this.renderPreview());
+    observer.observe(preview);
+    preview.ownerDocument.fonts?.ready.then(
+      () => this.renderPreview(),
+      () => undefined,
+    );
     this.renderPreview();
     return () => {
+      observer.disconnect();
       if (this.previewEl === preview) this.previewEl = null;
     };
   }
@@ -278,8 +289,12 @@ export class RealHighlightsSettingTab extends PluginSettingTab {
     const el = this.previewEl;
     if (!el) return;
     // Erst rendern, wenn der Einstellungsdialog im Layout ist.
-    window.requestAnimationFrame(() => {
-      if (!el.isConnected) return;
+    if (this.previewFrame) return;
+    const win = el.ownerDocument.defaultView ?? window;
+    this.previewFrame = win.requestAnimationFrame(() => {
+      this.previewFrame = 0;
+      // Nicht sichtbar -> der ResizeObserver meldet sich, sobald es Layout gibt.
+      if (!el.isConnected || el.offsetWidth === 0) return;
       const s = this.plugin.settings;
       const active = anyModeActive(s);
       el.parentElement?.toggleClass("real-highlights-preview-off", !active);
